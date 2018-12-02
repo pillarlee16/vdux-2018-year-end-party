@@ -1,23 +1,25 @@
 <template>
-  <div class="home">
-    <div class="inner">
-      <div class="title">
-        <p class="small">WELCOME TO</p>
-        <p>2018</p>
-        <p>THE GREAT VDUX</p>
-      </div>
-      <div class="ui-nickname">
-        <input type="text" placeholder="닉네임을 입력하세요" />
-      </div>
-      <div class="ui-enter">
-        <div class="btn" v-on:click="handleEnter">입장하기</div>
+  <transition name="show">
+    <div class="home">
+      <div class="inner">
+        <div class="title">
+          <p class="small">WELCOME TO</p>
+          <p>2018</p>
+          <p>THE GREAT VDUX</p>
+        </div>
+        <div class="ui-nickname">
+          <input type="text" placeholder="닉네임을 입력하세요" />
+        </div>
+        <div class="ui-enter">
+          <div class="btn" v-on:click="handleEnter">입장하기</div>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
-import axios from 'axios';
+import ApiService from '../services/ApiService.js';
 
 export default {
   computed: {
@@ -38,15 +40,7 @@ export default {
       } else if (value.length > 8) {
         alert('닉네임은 최대 8자까지 입력할 수 있습니다.');
       } else {
-        console.log(value, this.userId);
-        const nickname = value;
-        const _id = this.userId;
-
-        axios.put('http://localhost:3006/api/user', { _id, nickname })
-          .then(res => {
-            console.log('update nickname', res)
-            this.updateUser({ nickname });
-          });
+        ApiService.requestUpdateUser({ _id: this.userId, nickname: value });
       }
       console.log(value, value.length);
     },
@@ -143,4 +137,16 @@ export default {
   line-height: 34px;
   text-align: center;
 }
+
+
+.show-enter, .show-leave-to {
+  opacity: 0;
+}
+.show-enter-to, .show-leave {
+  opacity: 1;
+}
+.show-leave-active {
+  transition: opacity 0.7s ease-in-out;
+}
+
 </style>

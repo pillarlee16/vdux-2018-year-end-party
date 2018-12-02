@@ -1,5 +1,5 @@
 <template>
-  <div id="mobile-app">
+  <div id="mobile">
     <!-- <div class="test">
       <ul>
         <li>{{ screenWidth }}</li>
@@ -8,11 +8,13 @@
         <li>{{ innerHeight }}</li>
       </ul>
     </div> -->
-    <home v-if="!isLogin"></home>
-    <template v-if="isLogin">
-      <app-header></app-header>
-      <chat-list></chat-list>
-      <chat-input></chat-input>
+    <template v-if="isReady">
+      <home v-if="!isLogin"></home>
+      <template v-if="isLogin">
+        <app-header></app-header>
+        <chat-list></chat-list>
+        <chat-input></chat-input>
+      </template>
     </template>
   </div>
 </template>
@@ -21,51 +23,55 @@
 import AppHeader from './AppHeader.vue';
 import ChatList from './ChatList.vue';
 import ChatInput from './ChatInput.vue';
-import ChatSocket from '../services/ChatSocket.js';
+import ChatService from '../services/ChatService.js';
 import Home from './Home.vue';
 
 import axios from 'axios';
 
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
+import ApiService from '../services/ApiService.js';
+
+const PREFIX = '[mobile/index]';
+
 
 export default {
   data() {
     return {
-      screenWidth: null,
-      screenHeight: null,
-      innerWidth: null,
-      innerHeight: null,
-      isLogin: false,
+      isReady: false,
     };
   },
   computed: {
-    appStyle() {
-      return `width: ${this.innerWidth}px; height: ${this.innerHeight}px`;
+    ...mapState('user', {
+      userId: (state) => state._id,
+      nickname: (state) => state.nickname,
+    }),
+    isLogin() {
+      return this.userId && this.nickname;
     },
   },
   created() {
-    console.log('[Mobile/index]', 'created');
+    console.log(PREFIX, 'created');
 
     const localStorage = window.localStorage;
     const id = localStorage.getItem('vdux_user_id');
-    console.log('id', id);
+
+    console.log(PREFIX, 'vdux_user_id at localStorage', id);
 
     if (!id) {
-      axios.get('http://localhost:3006/api/user').then((res) => {
-        console.log('new user', res);
-        this.updateUser(res.data);
-        localStorage.setItem('vdux_user_id', res.data._id);
+      ApiService.requestCreateUser().then((data) => {
+        localStorage.setItem('vdux_user_id', data._id);
+        this.isReady = true;
       });
     } else {
-      axios.get(`http://localhost:3006/api/user/${id}`).then((res) => {
-        console.log('get a user', res);
-        this.updateUser(res.data);
-        if (res.data.nickname) {
-          this.isLogin = true;
-        }
-      });
+      ApiService.requestGetUser()
+        .then(() => {
+          this.isReady = true;
+        })
+        .catch((err) => {
+          window.localStorage.clear();
+          location.reload();
+        });
     }
-
   },
   mounted() {
 
@@ -99,7 +105,7 @@ export default {
 </script>
 
 <style>
-#mobile-app {
+#mobile {
   position: absolute;
   left: 0;
   top: 0;

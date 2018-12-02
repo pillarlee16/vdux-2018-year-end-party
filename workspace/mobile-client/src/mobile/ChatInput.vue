@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import ChatSocket from '../services/ChatSocket.js';
+import ChatService from '../services/ChatService.js';
 
 export default {
   mounted() {
@@ -17,14 +17,36 @@ export default {
   methods: {
     handleSubmit(event) {
       event.preventDefault();
-      // alert('submit');
 
       const $input = this.$el.querySelector('.input-message');
-      console.log($input.value);
-      ChatSocket.send($input.value);
+
+      const value = $input.value;
+
+
+      if (!value) return;
+      if (value.startsWith('!')) {
+        const tokens = value.split(' ');
+        console.log(tokens);
+
+        const cmd = tokens[0];
+        switch (cmd) {
+          case '!vote':
+          case '!투표':
+            break;
+          case '!nickname':
+          case '!닉네임':
+            break;
+          case '!clear':
+            window.localStorage.clear();
+            break;
+        }
+      } else {
+        ChatService.send($input.value);
+      }
+
+
 
       $input.value = '';
-      // return false;
     }
   }
 }

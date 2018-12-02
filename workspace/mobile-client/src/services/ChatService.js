@@ -4,18 +4,20 @@ import io from 'socket.io-client';
 
 import store from '../store/index.js';
 
-// const colors = [ 'red', 'pink', 'purple', 'deeppurple', 'indigo', 'blue', 'lightblue', 'cyan', 'teal', 'green', 'lightgreen', 'lime', 'yellow', 'amber', 'orange', 'deeporange' ];
-
 export default new Vue({
   store,
   computed: {
+    ...mapState([
+      'hostname',
+    ]),
     ...mapState('user', [
       'nickname',
       'nicknameColor',
-    ])
+    ]),
+    url() { return `http://${this.hostname}:3005`; },
   },
   created() {
-    const socket = this.socket = io('http://localhost:3005');
+    const socket = this.socket = io(this.url);
 
     socket.on('connect', function () { console.log('connect') });
     socket.on('message-to-client', this.handleMessage.bind(this));
@@ -33,8 +35,6 @@ export default new Vue({
         const message = {
           nickname: this.nickname,
           nicknameColor: this.nicknameColor,
-          // nickname: Math.random(),
-          // nicknameColor: colors[Math.floor(Math.random() * colors.length)],
           text };
         this.addMessage({ ...message, from: 'me' });
         socket.emit('message-to-server', message);

@@ -45,20 +45,21 @@ export default {
   },
   watch: {
     messages() {
-      const last = this.messages[this.messages.length - 1];
-      if (last && last.from === 'me') {
-        this.scrollToBottom();
-      } else {
-        const elementHeight = 32;
-        const scrollTop = this.$el.scrollTop;
-        const scrollHeight = this.$el.scrollHeight;
-        const clientHeight = this.$el.clientHeight;
-        console.log('data',scrollTop, scrollHeight, clientHeight, elementHeight);
-        console.log('data2', scrollHeight - clientHeight - scrollTop, elementHeight);
-        if (scrollHeight - clientHeight - scrollTop < elementHeight) {
-          this.scrollToBottom();
-        }
-      }
+      // const last = this.messages[this.messages.length - 1];
+      // if (last && last.from === 'me') {
+      //   this.scrollToBottom();
+      // } else {
+      //   const elementHeight = 32;
+      //   const scrollTop = this.$el.scrollTop;
+      //   const scrollHeight = this.$el.scrollHeight;
+      //   const clientHeight = this.$el.clientHeight;
+      //   console.log('data',scrollTop, scrollHeight, clientHeight, elementHeight);
+      //   console.log('data2', scrollHeight - clientHeight - scrollTop, elementHeight);
+      //   if (scrollHeight - clientHeight - scrollTop < elementHeight) {
+      //     this.scrollToBottom();
+      //   }
+      // }
+      this.scrollToBottom();
     },
   },
   methods: {
@@ -79,15 +80,20 @@ export default {
 <style scoped>
 .chat-list {
   position: absolute;
-  left: 0;
+  right: 10px;
   top: 48px;
-  width: 100%;
-  height: calc(100% - 52px - 48px);
+  width: 300px;
+  height: 800px;
   box-sizing: border-box;
   padding-top: 8px;
   /* background-color: grey; */
   overflow: scroll;
+  background-color: rgba(255, 255, 255, 0.5);
 }
+.chat-list::-webkit-scrollbar {
+  display: none;
+}
+
 
 .chat-list p {
   width: 100%;

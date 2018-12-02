@@ -7,6 +7,8 @@ Vue.use(Vuex)
 
 const $store = window.$store = new Vuex.Store({
   state: {
+    // hostname: 'localhost',
+    hostname: 'vdux.iptime.org',
     messages: [],
     message: null,
   },
