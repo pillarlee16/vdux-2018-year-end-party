@@ -8,6 +8,14 @@
         <chat-input></chat-input>
       </template>
     </template>
+    <!-- <div class="test">
+      <ul>
+        <li>screenWidth: {{ screenWidth }}</li>
+        <li>screenHeight: {{ screenHeight }}</li>
+        <li>viewportWidth: {{ viewportWidth }}</li>
+        <li>viewportHeight: {{ viewportHeight }}</li>
+      </ul>
+    </div> -->
   </div>
 </template>
 
@@ -33,12 +41,21 @@ export default {
     };
   },
   computed: {
+    ...mapState([
+      'screenWidth',
+      'screenHeight',
+      'viewportWidth',
+      'viewportHeight',
+    ]),
     ...mapState('user', {
       userId: (state) => state._id,
       nickname: (state) => state.nickname,
     }),
     isLogin() {
       return this.userId && this.nickname;
+    },
+    appStyle() {
+      return `width: ${this.viewportWidth}px; height: ${this.viewportHeight}px;`;
     },
   },
   created() {
@@ -95,6 +112,11 @@ export default {
 </script>
 
 <style>
+body {
+  position: relative;
+  overflow: hidden;
+}
+
 #mobile {
   position: absolute;
   left: 0;
@@ -110,5 +132,6 @@ export default {
   left: 0;
   top: 0;
   color: white;
+  pointer-events: none;
 }
 </style>

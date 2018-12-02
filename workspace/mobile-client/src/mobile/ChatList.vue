@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-list">
+  <div class="chat-list" :style="wrapStyle">
     <div class="slider" :style="sliderStyle">
       <p v-for="(msg, idx) in messages" :key="idx">
         <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
@@ -54,6 +54,9 @@ export default {
       // const scrollY = (this.cacheScrollY !== null) ? this.cacheScrollY : this.scrollY;
       return `transform: translate3d(0, ${this.scrollY}px, 0)`;
     },
+    wrapStyle() {
+      return `height: ${this.viewportHeight - 52 - 48}px;`;
+    },
   },
   created() {
   },
@@ -67,9 +70,11 @@ export default {
     this.onTouchmove = onTouchmove.bind(this);
     this.onTouchend = onTouchend.bind(this);
 
-    $wrap.addEventListener('mousedown', this.onMousedown);
-    document.addEventListener('mousemove', this.onMousemove);
-    document.addEventListener('mouseup', this.onMouseup);
+    if (!hasTouchSupport()) {
+      $wrap.addEventListener('mousedown', this.onMousedown);
+      document.addEventListener('mousemove', this.onMousemove);
+      document.addEventListener('mouseup', this.onMouseup);
+    }
 
     $wrap.addEventListener('touchstart', this.onTouchstart);
     document.addEventListener('touchmove', this.onTouchmove);
@@ -124,9 +129,12 @@ export default {
   beforeDestroy() {
     const $wrap = this.$el;
 
-    $wrap.removeEventListener('mousedown', this.onMousedown);
-    document.removeEventListener('mousemove', this.onMousemove);
-    document.removeEventListener('mouseup', this.onMouseup);
+    if (!hasTouchSupport()) {
+      $wrap.removeEventListener('mousedown', this.onMousedown);
+      document.removeEventListener('mousemove', this.onMousemove);
+      document.removeEventListener('mouseup', this.onMouseup);
+    }
+      
 
     $wrap.removeEventListener('touchstart', this.onTouchstart);
     document.removeEventListener('touchmove', this.onTouchmove);
@@ -134,8 +142,10 @@ export default {
   },
   watch: {
     viewportHeight() {
-      this.updateSlider();
-      this.scrollToBottom();
+      this.$nextTick(() => {
+        this.updateSlider();
+        this.scrollToBottom();
+      });
     },
     messages() {
       this.$nextTick(() => {
@@ -243,8 +253,6 @@ function onMouseup(evt) {
 }
 
 function onTouchstart(evt) {
-  evt.preventDefault();
-
   this.touchStart(evt.touches[0].clientY);
 }
 
@@ -256,6 +264,13 @@ function onTouchend(evt) {
   this.touchEnd();
 }
 
+function hasTouchSupport() {
+  return ("ontouchstart" in window) || // touch events
+          (window.Modernizr && window.Modernizr.touch) || // modernizr
+          (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
+}
+
+
 </script>
 <style scoped>
 .chat-list {
@@ -263,15 +278,17 @@ function onTouchend(evt) {
   left: 0;
   top: 48px;
   width: 100%;
-  height: calc(100% - 52px - 48px);
+  /* height: calc(100% - 52px - 48px); */
   box-sizing: border-box;
   /* background-color: grey; */
   overflow: hidden;
 }
 
 .chat-list .slider {
-  position: relative;
-  user-select: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  user-select: none; 
 }
 
 .chat-list p {
