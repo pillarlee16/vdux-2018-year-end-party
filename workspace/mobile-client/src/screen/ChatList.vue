@@ -1,8 +1,10 @@
 <template>
   <div class="chat-list">
-    <p v-for="(msg, idx) in messages" :key="idx">
-      <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
-    </p>
+    <div class="slider" :style="sliderStyle">
+      <p v-for="(msg, idx) in messages" :key="idx">
+        <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
+      </p>
+    </div>
   </div>
 </template>
 <script>
@@ -31,35 +33,31 @@ export default {
   data() {
     return {
       scrollLocked: false,
+      scrollY: 0,
+      visibleHeight: 0,
+      scrollHeight: 0,
     }
   },
   computed: {
     ...mapState([
       'messages',
     ]),
+    sliderStyle() {
+      // const scrollY = (this.cacheScrollY !== null) ? this.cacheScrollY : this.scrollY;
+      return `transform: translate3d(0, ${this.scrollY}px, 0)`;
+    },
   },
   created() {
   },
   mounted() {
     // this.$el.addEventListener('scroll', this.handleScroll.bind(this));
+    this.updateSlider();
   },
   watch: {
     messages() {
-      // const last = this.messages[this.messages.length - 1];
-      // if (last && last.from === 'me') {
-      //   this.scrollToBottom();
-      // } else {
-      //   const elementHeight = 32;
-      //   const scrollTop = this.$el.scrollTop;
-      //   const scrollHeight = this.$el.scrollHeight;
-      //   const clientHeight = this.$el.clientHeight;
-      //   console.log('data',scrollTop, scrollHeight, clientHeight, elementHeight);
-      //   console.log('data2', scrollHeight - clientHeight - scrollTop, elementHeight);
-      //   if (scrollHeight - clientHeight - scrollTop < elementHeight) {
-      //     this.scrollToBottom();
-      //   }
-      // }
-      this.scrollToBottom();
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      })
     },
   },
   methods: {
@@ -70,9 +68,19 @@ export default {
 
       // this.scrollLocked = ($el.scrollHeight - $el.clientHeight !== $el.scrollTop);
     },
+    updateSlider() {
+      this.visibleHeight = this.$el.clientHeight;
+      this.scrollHeight = this.$el.querySelector('.slider').clientHeight;
+    },
     scrollToBottom() {
-      const $el = this.$el;
-      $el.scrollTop = $el.scrollHeight - $el.clientHeight;
+      this.scrollHeight = this.$el.querySelector('.slider').clientHeight;
+      if (this.scrollHeight < this.visibleHeight) {
+        this.$el.scrollTop = 0;
+        // this.scrollY = 0;
+      } else {
+        this.$el.scrollTop = this.scrollHeight - this.visibleHeight;
+        // this.scrollY = this.visibleHeight - this.scrollHeight;
+      }
     },
   },
 }
@@ -80,15 +88,15 @@ export default {
 <style scoped>
 .chat-list {
   position: absolute;
-  right: 10px;
+  right: 100px;
   top: 48px;
-  width: 300px;
+  width: 600px;
   height: 800px;
   box-sizing: border-box;
   padding-top: 8px;
   /* background-color: grey; */
   overflow: scroll;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .chat-list::-webkit-scrollbar {
   display: none;
@@ -101,8 +109,8 @@ export default {
   padding-top: 4px;
   padding-bottom: 4px;
   padding-right: 16px;
-  line-height: 24px;
-  font-size: 14px;
+  line-height: 60px;
+  font-size: 36px;
   color: rgba(255, 255, 255, 1);
   box-sizing: border-box;
   word-break: break-all;
