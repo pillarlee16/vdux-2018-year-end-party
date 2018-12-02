@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "popmotion": "^8.5.3",
     "socket.io-client": "^2.1.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.2",

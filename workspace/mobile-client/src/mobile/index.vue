@@ -1,13 +1,5 @@
 <template>
   <div id="mobile">
-    <!-- <div class="test">
-      <ul>
-        <li>{{ screenWidth }}</li>
-        <li>{{ screenHeight }}</li>
-        <li>{{ innerWidth }}</li>
-        <li>{{ innerHeight }}</li>
-      </ul>
-    </div> -->
     <template v-if="isReady">
       <home v-if="!isLogin"></home>
       <template v-if="isLogin">
@@ -63,7 +55,7 @@ export default {
         this.isReady = true;
       });
     } else {
-      ApiService.requestGetUser()
+      ApiService.requestGetUser(id)
         .then(() => {
           this.isReady = true;
         })
@@ -74,26 +66,24 @@ export default {
     }
   },
   mounted() {
-
-    const ctx = this;
-
-    ctx.screenWidth = window.screen.width;
-    ctx.screenHeight = window.screen.height;
-    ctx.innerWidth = window.innerWidth;
-    ctx.innerHeight = window.innerHeight;
-
-    window.addEventListener('resize', function () {
-      // alert('resize');
-      ctx.screenWidth = window.screen.width;
-      ctx.screenHeight = window.screen.height;
-      ctx.innerWidth = window.innerWidth;
-      ctx.innerHeight = window.innerHeight;
-    });
+    this.onResize();
+    window.addEventListener('resize', this.onResize.bind(this));
   },
   methods: {
+    ...mapActions([
+      'updateScreenSize',
+    ]),
     ...mapActions('user', {
       updateUser: 'update',
     }),
+    onResize() {
+      this.updateScreenSize({
+        screenWidth: window.screen.width,
+        screenHeight: window.screen.height,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+      });
+    },
   },
   components: {
     AppHeader,
