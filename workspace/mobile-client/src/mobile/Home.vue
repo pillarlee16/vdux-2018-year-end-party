@@ -19,7 +19,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
-import ApiService from '../services/ApiService.js';
+import API from '../services/API/index.js';
 
 export default {
   computed: {
@@ -40,7 +40,7 @@ export default {
       } else if (value.length > 8) {
         alert('닉네임은 최대 8자까지 입력할 수 있습니다.');
       } else {
-        ApiService.requestUpdateUser({ _id: this.userId, nickname: value });
+        API.user.requestUpdate(this.userId, { nickname: value });
       }
       console.log(value, value.length);
     },

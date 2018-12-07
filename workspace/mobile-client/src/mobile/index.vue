@@ -29,10 +29,9 @@ import Home from './Home.vue';
 import axios from 'axios';
 
 import { mapState, mapActions } from 'vuex';
-import ApiService from '../services/ApiService.js';
+import API from '../services/API/index.js';
 
 const PREFIX = '[mobile/index]';
-
 
 export default {
   data() {
@@ -65,14 +64,14 @@ export default {
     const id = localStorage.getItem('vdux_user_id');
 
     console.log(PREFIX, 'vdux_user_id at localStorage', id);
-
     if (!id) {
-      ApiService.requestCreateUser().then((data) => {
+      API.user.requestCreate().then((data) => {
+        console.log(PREFIX, 'data', data);
         localStorage.setItem('vdux_user_id', data._id);
         this.isReady = true;
       });
     } else {
-      ApiService.requestGetUser(id)
+      API.user.requestGetOne(id)
         .then(() => {
           this.isReady = true;
         })

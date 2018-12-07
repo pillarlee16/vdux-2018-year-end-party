@@ -4,6 +4,7 @@ const colors = [ 'red', 'pink', 'purple', 'deeppurple', 'indigo', 'blue', 'light
 
 let _db = null;
 let _User = null;
+let _Candidate = null;
 
 function connect() {
   return new Promise((resolve, reject) => {
@@ -33,109 +34,122 @@ function initScheme() {
     dressVote: Number,
     donation: Number,
   });
+
+  const candidateSchema = new mongoose.Schema({
+    index: Number,
+    name: String,
+    imageUrl: String,
+    enabled: Boolean,
+    like: Number,
+    vote: Number,
+  });
   
   _User = mongoose.model('User', userSchema);
+  _Candidate = mongoose.model('Candidate', candidateSchema);
 
 
-  _User.create({ nickname: 'Hello' });
+  // _User.create({ nickname: 'Hello' });
 }
 
-function createUser() {
-  return new Promise((resolve, reject) => {
-    if (!_User) reject();
-
-    _User.create({
-      nickname: '',
-      nicknameColor: colors[Math.floor(Math.random() * colors.length)],
-      dressVote: -1,
-      donation: 20000,
-    }, function (err, user) {
-      if (err) reject(err);
-      resolve(user);
+const user = {
+  createUser: function () {
+    return new Promise((resolve, reject) => {
+      if (!_User) reject();
+    
+      _User.create({
+        nickname: '',
+        nicknameColor: colors[Math.floor(Math.random() * colors.length)],
+        dressVote: -1,
+        donation: 20000,
+      }, function (err, user) {
+        if (err) reject(err);
+        resolve(user);
+      });
     });
-  });
-}
-
-function findById(id) {
-  return new Promise((resolve, reject) => {
-    if (!_User) reject();
-
-    _User.findOne({ _id: id }, function (err, raw) {
-      if (err) reject(err);
-      resolve(raw);
+  },
+  findById: function (id) {
+    return new Promise((resolve, reject) => {
+      if (!_User) reject();
+    
+      _User.findOne({ _id: id }, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
     });
-  });
-}
-
-function findByNickname(nickname) {
-  return new Promise((resolve, reject) => {
-    if (!_User) reject();
-
-    _User.find({ nickname }, function (err, raw) {
-      if (err) reject(err);
-      resolve(raw);
+  },
+  findByNickname: function (nickname) {
+    return new Promise((resolve, reject) => {
+      if (!_User) reject();
+  
+      _User.find({ nickname }, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
     });
-  });
-}
-
-function updateById(id, param) {
-  return new Promise((resolve, reject) => {
-    if (!_User) reject();
-
-    _User.updateOne({ _id: id }, param, null, function (err, raw) {
-      if (err) reject(err);
-      resolve(raw);
+  },
+  updateById: function (id, param) {
+    return new Promise((resolve, reject) => {
+      if (!_User) reject();
+  
+      _User.updateOne({ _id: id }, param, null, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
     });
-  });
-}
+  },
+};
 
-// mongoose.connect('mongodb://localhost/test');
+const candidate = {
+  createCandidate: function () {
+    return new Promise((resolve, reject) => {
+      if (!_Candidate) reject();
+    
+      _Candidate.create({
+        name: '',
+        imageUrl: '',
+        enabled: true,
+        like: 0,
+        vote: 0,
+      }, function (err, user) {
+        if (err) reject(err);
+        resolve(user);
+      });
+    });
+  },
+  updateById: function (id, param) {
+    return new Promise((resolve, reject) => {
+      if (!_Candidate) reject();
+  
+      _Candidate.updateOne({ _id: id }, param, null, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
+    });
+  },
+  getAll: function () {
+    return new Promise((resolve, reject) => {
+      if (!_Candidate) reject();
 
-// const db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function() {
-//   console.log('mongodb is connected');
-//   // we're connected!
+      _Candidate.find(null, null, null, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
+    });
+  },
+  delete: function (id) {
+    return new Promise((resolve, reject) => {
+      if (!_Candidate) reject();
 
-//   const User = mongoose.model('User', userSchema);
-
-//   // User.find()
-
-
-//   // const kittySchema = new mongoose.Schema({ name: String });
-//   // kittySchema.methods.speak = function () {
-//   //   const greeting = this.name ? `Meow name is ${this.name}` : 'I dont have a name';
-//   //   console.log(greeting);
-//   // };
-//   // // console.log(kittySchema);
-
-//   // const Kitten = mongoose.model('Kitten', kittySchema);
-
-//   // const silence = new Kitten({ name: 'Silence' });
-//   // const flutty = new Kitten({ name: 'fluffy' });
-
-//   // console.log(silence.name);
-//   // flutty.speak();
-
-
-//   // flutty.save(function (err, flutty) {
-//   //   if (err) return console.error(err);
-//   //   flutty.speak();
-//   // });
-
-//   // Kitten.find({ name: /^fluff/ }, function (a, b) { console.log(a, b) });
-//   // Kitten.find({ _id: '5c0388c84a016e4ac6e22858' }, function (a, b) {
-//   //   console.log(a, b)
-//   //   console.log(b.name);
-//   //   b.speak();
-//   // });
-
-// });
+      _Candidate.deleteOne({ _id: id }, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
+    });
+  },
+};
 
 module.exports = {
   connect,
-  createUser,
-  findById,
-  findByNickname,
-  updateById,
+  user,
+  candidate,
 };

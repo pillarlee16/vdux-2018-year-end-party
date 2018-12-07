@@ -4,7 +4,7 @@ import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
 import store from '../store/index.js';
 
-const PREFIX = '[ApiService]';
+const PREFIX = '[API]';
 
 export default new Vue({
   store,
@@ -20,6 +20,49 @@ export default new Vue({
     ...mapActions('user', {
       updateUser: 'update',
     }),
+    ...mapActions('admin', {
+      updateAllAdmin: 'updateAll',
+      updateOneAdmin: 'updateOne',
+    }),
+    get(url = '') {
+      return new Promise((resolve, reject) => {
+        axios.get(`${this.url}/api/${url}`)
+          .then(res => {
+            const data = res.data;
+            if (data.error) {
+              reject(data.error);
+              return;
+            }
+            resolve(data);
+          })
+      });
+    },
+    put(url = '', payload) {
+      return new Promise((resolve, reject) => {
+        axios.put(`${this.url}/api/${url}`, payload)
+          .then(res => {
+            const data = res.data;
+            if (data.error) {
+              reject(data.error);
+              return;
+            }
+            resolve(data);
+          })
+      });
+    },
+    delete(url = '') {
+      return new Promise((resolve, reject) => {
+        axios.delete(`${this.url}/api/${url}`)
+          .then(res => {
+            const data = res.data;
+            if (data.error) {
+              reject(data.error);
+              return;
+            }
+            resolve(data);
+          })
+      });
+    },
     requestCreateUser() {
       return new Promise((resolve, reject) => {
         const url = `${this.url}/api/user`;
@@ -82,6 +125,25 @@ export default new Vue({
             resolve(payload);
           });
       });
+    },
+    requestCreateCandidate() {
+      return this.get('candidate/create')
+        .then(data => {
+          this.updateOneAdmin({ candidate: data });
+        });
+    },
+    requestGetAllCandidate() {
+      return this.get('candidate')
+        .then(data => {
+          console.log('requestGetAllCandidate', data);
+          this.updateAllAdmin({ candidates: data });
+        });
+    },
+    requestDeleteCandidate(_id) {
+      return this.delete(`candidate/${_id}`)
+        .then(data => {
+          console.log('!!!!!!!!');
+        });
     },
   },
 });
