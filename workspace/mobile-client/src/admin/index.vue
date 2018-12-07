@@ -14,7 +14,7 @@
         <td>Action</td>
       </thead>
       <tbody>
-        <tr v-for="(obj, index) in candidates" :key="index">
+        <tr v-for="(obj, index) in candidates" :data-id="obj._id" :key="index">
           <td>{{ obj._id }}</td>
           <td><input type="text" :value="obj.name" placeholder="name1" /></td>
           <td>{{ obj.imageUrl }}</td>
@@ -23,7 +23,7 @@
           <td>{{ obj.like }}</td>
           <td>{{ obj.vote }}</td>
           <td>
-            <button>APPLY</button>
+            <button v-on:click="onApplyClick(obj._id)">APPLY</button>
             <button v-on:click="onDeleteClick(obj._id)">DELETE</button>
           </td>
         </tr>
@@ -35,6 +35,7 @@
 import API from '../services/API/index.js';
 
 import { mapState } from 'vuex';
+import axios from 'axios';
 
 export default {
   computed: {
@@ -53,6 +54,24 @@ export default {
     },
     onGetAllClick() {
       // API.get('candidate').then(data => console.log(data));
+    },
+    onApplyClick(_id) {
+      const $row = this.$el.querySelector(`tr[data-id="${_id}"]`);
+      const $file = $row.querySelector('input[type="file"]');
+
+      const formData = new FormData();
+      formData.append('upname',$file.files[0]);
+
+      axios.post('http://localhost:3006/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then(function () {
+        console.log('UPLOAD SUCCESS');
+      }).catch(function () {
+        console.log('UPLOAD FAIL!!!');
+      });
+      console.log($row, $file, $file.value, $file.files, typeof $file.value);
     },
     onDeleteClick(_id) {
       console.log('delete', _id);

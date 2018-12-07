@@ -1,6 +1,9 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const multer = require('multer');
+const uuidv1 = require('uuid/v1');
 const port = 3006;
 const DB = require('../db/index.js');
 
@@ -79,6 +82,36 @@ app.delete('/api/candidate/:id', function (req, res) {
       res.send({ error });
     });
 });
+
+
+/***************************
+ * 
+ * CANDIDATE
+ * 
+ ***************************/
+
+const UPDATE_DIR = path.resolve(__dirname, '../static');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, UPDATE_DIR);
+  },
+  filename: function(req, file, cb) {
+    cb(null, `${uuidv1()}-${file.originalname}`);
+  }
+});
+const upload = multer({ storage }).array('upname', 20);
+
+app.post('/api/upload', function (req, res) {
+  upload(req, res, function (error) {
+    if (error) {
+      res.send({ error });
+      return;
+    }
+
+    console.log(req.files);
+  });
+});
+
 
 app.listen(port, function() {
   console.log('chat-server api is listening ', port);
