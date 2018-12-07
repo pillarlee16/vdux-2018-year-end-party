@@ -46,13 +46,10 @@ function initScheme() {
   
   _User = mongoose.model('User', userSchema);
   _Candidate = mongoose.model('Candidate', candidateSchema);
-
-
-  // _User.create({ nickname: 'Hello' });
 }
 
 const user = {
-  createUser: function () {
+  create: function () {
     return new Promise((resolve, reject) => {
       if (!_User) reject();
     
@@ -67,31 +64,21 @@ const user = {
       });
     });
   },
-  findById: function (id) {
+  findOne: function (_id) {
     return new Promise((resolve, reject) => {
       if (!_User) reject();
     
-      _User.findOne({ _id: id }, function (err, raw) {
+      _User.findOne({ _id }, function (err, raw) {
         if (err) reject(err);
         resolve(raw);
       });
     });
   },
-  findByNickname: function (nickname) {
+  update: function (_id, props) {
     return new Promise((resolve, reject) => {
       if (!_User) reject();
   
-      _User.find({ nickname }, function (err, raw) {
-        if (err) reject(err);
-        resolve(raw);
-      });
-    });
-  },
-  updateById: function (id, param) {
-    return new Promise((resolve, reject) => {
-      if (!_User) reject();
-  
-      _User.updateOne({ _id: id }, param, null, function (err, raw) {
+      _User.findByIdAndUpdate({ _id }, props, null, function (err, raw) {
         if (err) reject(err);
         resolve(raw);
       });
@@ -100,7 +87,7 @@ const user = {
 };
 
 const candidate = {
-  createCandidate: function () {
+  create: function () {
     return new Promise((resolve, reject) => {
       if (!_Candidate) reject();
     
@@ -116,17 +103,17 @@ const candidate = {
       });
     });
   },
-  updateById: function (id, param) {
+  update: function (_id, props) {
     return new Promise((resolve, reject) => {
       if (!_Candidate) reject();
   
-      _Candidate.updateOne({ _id: id }, param, null, function (err, raw) {
+      _Candidate.findByIdAndUpdate({ _id }, props, null, function (err, raw) {
         if (err) reject(err);
         resolve(raw);
       });
     });
   },
-  getAll: function () {
+  findAll: function () {
     return new Promise((resolve, reject) => {
       if (!_Candidate) reject();
 
@@ -136,11 +123,11 @@ const candidate = {
       });
     });
   },
-  delete: function (id) {
+  delete: function (_id) {
     return new Promise((resolve, reject) => {
       if (!_Candidate) reject();
 
-      _Candidate.deleteOne({ _id: id }, function (err, raw) {
+      _Candidate.deleteOne({ _id }, function (err, raw) {
         if (err) reject(err);
         resolve(raw);
       });

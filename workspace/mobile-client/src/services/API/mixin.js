@@ -11,7 +11,7 @@ export default {
     server() { return `http://${this.hostname}:3006`; },
   },
   methods: {
-    get(path = '') {
+    $$get(path = '') {
       return new Promise((resolve, reject) => {
         const url = `${this.server}/api/${path}`;
         console.log(PREFIX, 'get', url);
@@ -28,7 +28,7 @@ export default {
           })
       });
     },
-    put(path = '', payload) {
+    $$put(path = '', payload) {
       return new Promise((resolve, reject) => {
         const url = `${this.server}/api/${path}`;
         console.log(PREFIX, 'put', url, payload);
@@ -44,7 +44,7 @@ export default {
           })
       });
     },
-    delete(path = '') {
+    $$delete(path = '') {
       return new Promise((resolve, reject) => {
         const url = `${this.server}/api/${path}`;
         console.log(PREFIX, 'delete', url);
@@ -55,7 +55,7 @@ export default {
               reject(data.error);
               return;
             }
-            console.log(PREFIX, 'delete', 'success', url, payload);
+            console.log(PREFIX, 'delete', 'success', url);
             resolve(data);
           })
       });

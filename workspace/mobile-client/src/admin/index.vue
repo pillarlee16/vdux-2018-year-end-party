@@ -27,84 +27,12 @@
             <button v-on:click="onDeleteClick(obj._id)">DELETE</button>
           </td>
         </tr>
-        <!-- <tr>
-          <td>1</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr>
-        <tr>
-          <td>8</td>
-          <td><input type="text" value="" placeholder="name1" /></td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" /></td>
-          <td>0</td>
-          <td>0</td>
-          <td><button>APPLY</button></td>
-        </tr> -->
       </tbody>
     </table>
   </div>
 </template>
 <script>
-import API from '../services/API.js';
+import API from '../services/API/index.js';
 
 import { mapState } from 'vuex';
 
@@ -115,10 +43,11 @@ export default {
     ]),
   },
   created() {
-    // API.requestGetAllCandidate();
+    API.candidate.requestGetAll();
   },
   methods: {
     onCreateClick() {
+      API.candidate.requestCreate();
       // API.requestCreateCandidate();
       // API.get('candidate/create').then(data => console.log(data));
     },
@@ -127,6 +56,7 @@ export default {
     },
     onDeleteClick(_id) {
       console.log('delete', _id);
+      API.candidate.requestDelete(_id);
       // API.requestDeleteCandidate(_id);
     },
   },

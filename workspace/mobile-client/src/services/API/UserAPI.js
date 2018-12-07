@@ -15,21 +15,21 @@ export default new Vue({
       update: 'update',
     }),
     requestCreate() {
-      return this.put('user')
+      return this.$$put('user')
         .then(data => {
           this.update(data);
           return data;
         });
     },
     requestGetOne(id) {
-      return this.get(`user/${id}`)
+      return this.$$get(`user/${id}`)
         .then(data => { 
           this.update(data);
           return data;
         });
     },
     requestUpdate(id, payload) {
-      return this.put(`user/${id}`, payload)
+      return this.$$put(`user/${id}`, payload)
         .then(data => {
           this.update(payload);
           return data;

@@ -31,5 +31,15 @@ export default {
         commit('SET_CANDIDATES', payload.candidates);
       }
     },
+    delete({ state, commit }, payload) {
+      const candidates = state.candidates;
+      const matched = candidates.find(obj => { return obj._id === payload._id; });
+
+      if (matched) {
+        const index = candidates.indexOf(matched);
+        candidates.splice(index, 1);
+        commit('SET_CANDIDATES', candidates);
+      }
+    },
   },
 }
