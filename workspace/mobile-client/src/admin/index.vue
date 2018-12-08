@@ -16,10 +16,10 @@
       <tbody>
         <tr v-for="(obj, index) in candidates" :data-id="obj._id" :key="index">
           <td>{{ obj._id }}</td>
-          <td><input type="text" :value="obj.name" placeholder="name1" /></td>
+          <td><input class="cname" type="text" :value="obj.name" placeholder="name1" /></td>
           <td>{{ obj.imageUrl }}</td>
-          <td><input type="file" value="" placeholder="image1" /></td>
-          <td><input type="checkbox" :value="obj.enabled"/></td>
+          <td><input class="cfile" type="file" value="" placeholder="image1" /></td>
+          <td><input class="cenabled" type="checkbox" :checked="obj.enabled"/></td>
           <td>{{ obj.like }}</td>
           <td>{{ obj.vote }}</td>
           <td>
@@ -57,21 +57,43 @@ export default {
     },
     onApplyClick(_id) {
       const $row = this.$el.querySelector(`tr[data-id="${_id}"]`);
-      const $file = $row.querySelector('input[type="file"]');
 
-      const formData = new FormData();
-      formData.append('upname',$file.files[0]);
 
-      axios.post('http://localhost:3006/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }).then(function () {
-        console.log('UPLOAD SUCCESS');
-      }).catch(function () {
-        console.log('UPLOAD FAIL!!!');
-      });
-      console.log($row, $file, $file.value, $file.files, typeof $file.value);
+      const $cname = $row.querySelector('.cname');
+      const $cfile = $row.querySelector('.cfile');
+      const $cenabled = $row.querySelector('.cenabled');
+
+      (async function () {
+        const payload = {
+          name: $cname.value,
+          enabled: $cenabled.checked,
+        };
+  
+        if ($cfile.value) {
+          const data = await API.candidate.requestUpload($cfile);
+          console.log('!!!!', data);
+          payload.imageUrl = data.url;
+        }
+
+        console.log('payload', payload);
+
+        const result = await API.candidate.requestUpdate(_id, payload);
+
+        console.log('result', result);
+      })();
+
+      // const $file = $row.querySelector('input[type="file"]');
+      // console.log($file.value);
+
+      // API.candidate.requestUpload($file)
+      //   .then(function (data) {
+      //     console.log('UPLOAD SUCCESS', data);
+      //     $file.value = null;
+      //   })
+      //   .catch(function () {
+      //     console.log('UPLOAD FAIL');
+      //   });
+      // console.log($row, $file, $file.value, $file.files, typeof $file.value);
     },
     onDeleteClick(_id) {
       console.log('delete', _id);

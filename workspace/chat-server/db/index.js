@@ -78,7 +78,7 @@ const user = {
     return new Promise((resolve, reject) => {
       if (!_User) reject();
   
-      _User.findByIdAndUpdate({ _id }, props, null, function (err, raw) {
+      _User.updateOne({ _id }, props, null, function (err, raw) {
         if (err) reject(err);
         resolve(raw);
       });
@@ -107,7 +107,17 @@ const candidate = {
     return new Promise((resolve, reject) => {
       if (!_Candidate) reject();
   
-      _Candidate.findByIdAndUpdate({ _id }, props, null, function (err, raw) {
+      _Candidate.updateOne({ _id }, props, null, function (err, raw) {
+        if (err) reject(err);
+        resolve(raw);
+      });
+    });
+  },
+  findOne: function (_id) {
+    return new Promise((resolve, reject) => {
+      if (!_Candidate) reject();
+    
+      _Candidate.findOne({ _id }, function (err, raw) {
         if (err) reject(err);
         resolve(raw);
       });

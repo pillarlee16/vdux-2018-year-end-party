@@ -9,6 +9,7 @@ const DB = require('../db/index.js');
 
 app.use(cors());
 app.use(express.json());
+app.use('/static', express.static(path.resolve(__dirname, '../static')));
 
 const PREFIX = '[SERVER/API]';
 
@@ -34,7 +35,11 @@ app.put('/api/user/:id', function (req, res) {
   const props = req.body;
 
   DB.user.update(id, props)
-    .then(user => { res.send(user); })
+    .then(result => {
+      DB.user.findOne(id).then(user => {
+        res.send(user);
+      });
+    })
     .catch(error => { res.send({ error }); });
 });
 
@@ -58,12 +63,16 @@ app.put('/api/candidate', function (req, res) {
     .catch(error => { res.send({ error }); });
 });
 
-app.put('/api/candidate:id', function (req, res) {
+app.put('/api/candidate/:id', function (req, res) {
   const id = req.params.id;
   const props = req.body;
 
   DB.candidate.update(id, props)
-    .then(result => { res.send(result); })
+    .then(result => {
+      DB.candidate.findOne(id).then(candidate => {
+        res.send(candidate);
+      });
+    })
     .catch(error => { res.send({ error }); });
 });
 
@@ -86,7 +95,7 @@ app.delete('/api/candidate/:id', function (req, res) {
 
 /***************************
  * 
- * CANDIDATE
+ * UPLOAD
  * 
  ***************************/
 
@@ -96,7 +105,11 @@ const storage = multer.diskStorage({
     cb(null, UPDATE_DIR);
   },
   filename: function(req, file, cb) {
-    cb(null, `${uuidv1()}-${file.originalname}`);
+    const filename = file.originalname;
+    const tokens = filename.split('.');
+    const ext = (tokens.length >= 2) ? tokens[tokens.length - 1] : '';
+ 
+    cb(null, `${uuidv1()}.${ext}`);
   }
 });
 const upload = multer({ storage }).array('upname', 20);
@@ -108,7 +121,11 @@ app.post('/api/upload', function (req, res) {
       return;
     }
 
-    console.log(req.files);
+    const file = req.files[0];
+    const filename = file.filename;
+    const url = `http://localhost:3006/static/${file.filename}`;
+
+    res.send({ url, filename });
   });
 });
 

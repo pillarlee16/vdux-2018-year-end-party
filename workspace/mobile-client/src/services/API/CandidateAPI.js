@@ -6,6 +6,7 @@ import store from '../../store/index.js';
 const PREFIX = '[API/Candidate]';
 
 import ApiMixin from './mixin.js';
+import axios from 'axios';
 
 export default new Vue({
   store,
@@ -33,7 +34,7 @@ export default new Vue({
     requestUpdate(id, payload) {
       return this.$$put(`candidate/${id}`, payload)
         .then(data => {
-          // this.update(payload);
+          this.updateOne({ candidate: data });
           return data;
         });
     },
@@ -44,6 +45,12 @@ export default new Vue({
           this.delete({ _id: data._id });
           return data;
         });
+    },
+    requestUpload($file) {
+      const formData = new FormData();
+      formData.append('upname',$file.files[0]);
+
+      return this.$$post('upload', formData, { headers: { 'Content-Type': 'multipart/form-data' }})
     },
   },
 });

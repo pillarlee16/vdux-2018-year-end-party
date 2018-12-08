@@ -6,6 +6,9 @@ export default {
     candidates: [],
   },
   mutations: {
+    SET_CANDIDATE(state, payload) {
+      Vue.set(state.candidates, payload.index, payload.value);
+    },
     SET_CANDIDATES(state, value) {
       Vue.set(state, 'candidates', value);
     },
@@ -20,11 +23,10 @@ export default {
 
       if (matched) {
         const index = candidates.indexOf(matched);
-        candidates[index] = updated;
+        commit('SET_CANDIDATE', { index, value: updated });  
       } else {
-        candidates.push(updated);
+        commit('SET_CANDIDATE', { index: candidates.length, value: updated });
       }
-      commit('SET_CANDIDATES', candidates);
     },
     updateAll({ commit }, payload) {
       if (payload.candidates) {

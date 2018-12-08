@@ -28,6 +28,22 @@ export default {
           })
       });
     },
+    $$post(path = '', payload = null, opt = null) {
+      return new Promise((resolve, reject) => {
+        const url = `${this.server}/api/${path}`;
+        console.log(PREFIX, 'post', url, payload);
+        axios.post(url, payload, opt)
+          .then(res => {
+            const data = res.data;
+            if (data.error) {
+              reject(data.error);
+              return;
+            }
+            console.log(PREFIX, 'post', 'success', url, payload);
+            resolve(data);
+          })
+      });
+    },
     $$put(path = '', payload) {
       return new Promise((resolve, reject) => {
         const url = `${this.server}/api/${path}`;
