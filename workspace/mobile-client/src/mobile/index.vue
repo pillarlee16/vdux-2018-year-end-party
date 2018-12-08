@@ -6,6 +6,7 @@
         <app-header></app-header>
         <chat-list></chat-list>
         <chat-input></chat-input>
+        <vote-popup></vote-popup>
       </template>
     </template>
     <!-- <div class="test">
@@ -23,6 +24,7 @@
 import AppHeader from './AppHeader.vue';
 import ChatList from './ChatList.vue';
 import ChatInput from './ChatInput.vue';
+import VotePopup from './VotePopup.vue';
 import ChatService from '../services/ChatService.js';
 import Home from './Home.vue';
 
@@ -105,6 +107,7 @@ export default {
     AppHeader,
     ChatList,
     ChatInput,
+    VotePopup,
     Home,
   }
 }

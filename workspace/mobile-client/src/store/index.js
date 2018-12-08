@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import user from './modules/user.js';
-import admin from './modules/admin.js';
+import candidate from './modules/candidate.js';
 
 Vue.use(Vuex)
 
@@ -49,7 +49,7 @@ const $store = window.$store = new Vuex.Store({
   },
   modules: {
     user,
-    admin,
+    candidate,
   },
 })
 

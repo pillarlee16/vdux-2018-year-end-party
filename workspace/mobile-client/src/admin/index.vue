@@ -39,7 +39,7 @@ import axios from 'axios';
 
 export default {
   computed: {
-    ...mapState('admin', [
+    ...mapState('candidate', [
       'candidates',
     ]),
   },

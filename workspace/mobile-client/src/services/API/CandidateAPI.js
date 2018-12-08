@@ -6,13 +6,12 @@ import store from '../../store/index.js';
 const PREFIX = '[API/Candidate]';
 
 import ApiMixin from './mixin.js';
-import axios from 'axios';
 
 export default new Vue({
   store,
   mixins: [ ApiMixin ],
   methods: {
-    ...mapActions('admin', [
+    ...mapActions('candidate', [
       'updateOne',
       'updateAll',
       'delete',
