@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default {
   namespaced: true,
   state: {
@@ -6,6 +8,7 @@ export default {
     nicknameColor: null,
     dressVote: null,
     donation: null,
+    votes: null,
   },
   mutations: {
     SET_ID(state, value) {
@@ -23,6 +26,10 @@ export default {
     SET_DONATION(state, value) {
       state.donation = value;
     },
+    SET_VOTES(state, value) {
+      Vue.set(state, 'votes', value);
+      // state.votes = value;
+    },
   },
   getters: {
 
@@ -35,6 +42,7 @@ export default {
       if (payload.nicknameColor) commit('SET_NICKNAME_COLOR', payload.nicknameColor);
       if (payload.dressVote) commit('SET_DRESS_VOTE', payload.dressVote);
       if (payload.donation) commit('SET_DONATION', payload.donation);
+      if (payload.votes) commit('SET_VOTES', payload.votes);
     },
   },
 };

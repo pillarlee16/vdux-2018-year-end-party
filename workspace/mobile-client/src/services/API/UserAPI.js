@@ -12,28 +12,40 @@ export default new Vue({
   mixins: [ ApiMixin ],
   methods: {
     ...mapActions('user', {
-      update: 'update',
+      updateUser: 'update',
+    }),
+    ...mapActions('candidate', {
+      updateCandidate: 'updateOne',
     }),
     requestCreate() {
       return this.$$put('user')
         .then(data => {
-          this.update(data);
+          this.updateUser(data);
           return data;
         });
     },
     requestGetOne(id) {
       return this.$$get(`user/${id}`)
         .then(data => { 
-          this.update(data);
+          this.updateUser(data);
           return data;
         });
     },
     requestUpdate(id, payload) {
       return this.$$put(`user/${id}`, payload)
         .then(data => {
-          this.update(payload);
+          this.updateUser(data);
           return data;
         });
     },
+    requestVote(id, payload) {
+      return this.$$put(`user/vote/${id}`, payload)
+        .then(data => {
+          // @todo
+          this.updateUser(data.user);
+          this.updateCandidate({ candidate: data.candidate });
+          return data;
+        });
+    }
   },
 });

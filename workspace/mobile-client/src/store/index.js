@@ -8,18 +8,22 @@ Vue.use(Vuex)
 
 const $store = window.$store = new Vuex.Store({
   state: {
-    hostname: 'localhost',
+    // hostname: 'localhost',
     screenWidth: null,
     screenHeight: null,
     viewportWidth: null,
     viewportHeight: null,
-    // hostname: 'vdux.iptime.org',
+    hostname: 'vdux.iptime.org',
     messages: [],
     message: null,
   },
   mutations: {
     addMessage(state, value) {
       const messages = state.messages;
+      if (messages.length > 100000) {
+        messages.splice(0, 1);
+      }
+
       messages.push(value);
 
       Vue.set(state, 'messages', messages);

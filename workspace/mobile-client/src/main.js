@@ -7,6 +7,8 @@ import Screen from './screen/index.vue';
 import Admin from './admin/index.vue';
 import store from './store/index.js'
 
+import Keyboard from './services/Keyboard.js';
+
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 

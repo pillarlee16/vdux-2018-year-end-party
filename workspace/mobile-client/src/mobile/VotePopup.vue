@@ -10,7 +10,8 @@
         </div>
         <div class="bar">
           <div class="name">{{ candidate.name }}</div>
-
+          <div class="btn-heart" v-on:click="onHeartClick(candidate._id)"></div>
+          <div class="btn-ballon" :class="{ 'checked': votes.indexOf(candidate._id) >= 0 }" v-on:click="onBallonClick(candidate._id)"></div>
         </div>
       </div>
     </div>
@@ -23,10 +24,19 @@ import API from '../services/API/index.js';
 import candidate from '../store/modules/candidate.js';
 
 export default {
+  data() {
+    return {
+      heartEnabled: true,
+    };
+  },
   computed: {
     ...mapState([
       'viewportWidth',
     ]),
+    ...mapState('user', {
+      userId: (state) => state._id,
+      votes: (state) => state.votes,
+    }),
     ...mapState('candidate', [
       'candidates',
     ]),
@@ -60,6 +70,23 @@ export default {
   },
   created() {
     API.candidate.requestGetAll();
+  },
+  methods: {
+    onHeartClick(_id) {
+      if (this.heartEnabled) {
+        this.heartEnabled = false;
+
+        API.candidate.requestLike(_id)
+          .then(() => { this.heartEnabled = true; })
+          .catch(() => { this.heartEnabled = true; });
+      }
+    },
+    onBallonClick(candidateId) {
+      API.user.requestVote(this.userId, { candidateId })
+        .then((result) => {
+          console.log(result);
+        })
+    },
   },
 };
 
@@ -136,6 +163,7 @@ function loadImage(url) {
 .vote-popup .card-row .photo {
   position: relative;
   overflow: hidden;
+  background-color: grey;
 }
 
 .vote-popup .card-row .bar {
@@ -152,4 +180,27 @@ function loadImage(url) {
   color: rgba(255, 255, 255, 0.8);
 }
 
+
+.vote-popup .card-row .btn-heart {
+  position: absolute;
+  top: 16px;
+  right: 72px;
+  background-color: red;
+  width: 32px;
+  height: 32px;
+}
+
+.vote-popup .card-row .btn-ballon {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  background-color: blue;
+  width: 32px;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.vote-popup .card-row .btn-ballon.checked {
+  border: 2px solid white;
+}
 </style>

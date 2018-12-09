@@ -51,5 +51,12 @@ export default new Vue({
 
       return this.$$post('upload', formData, { headers: { 'Content-Type': 'multipart/form-data' }})
     },
+    requestLike(id) {
+      return  this.$$put(`candidate/like/${id}`)
+        .then(data => {
+          this.updateOne({ candidate: data });
+          return data;
+        });
+    },
   },
 });

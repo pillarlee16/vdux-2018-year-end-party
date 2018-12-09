@@ -6,9 +6,9 @@
         <app-header></app-header>
         <chat-list></chat-list>
         <chat-input></chat-input>
-        <vote-popup></vote-popup>
       </template>
     </template>
+        <!-- <vote-popup></vote-popup> -->
     <!-- <div class="test">
       <ul>
         <li>screenWidth: {{ screenWidth }}</li>

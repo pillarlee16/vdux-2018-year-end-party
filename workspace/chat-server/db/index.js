@@ -33,6 +33,7 @@ function initScheme() {
     nicknameColor: String,
     dressVote: Number,
     donation: Number,
+    votes: [String],
   });
 
   const candidateSchema = new mongoose.Schema({

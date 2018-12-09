@@ -6,12 +6,15 @@ const multer = require('multer');
 const uuidv1 = require('uuid/v1');
 const port = 3006;
 const DB = require('../db/index.js');
+const EventEmitter = require('events');
 
 app.use(cors());
 app.use(express.json());
 app.use('/static', express.static(path.resolve(__dirname, '../static')));
 
 const PREFIX = '[SERVER/API]';
+
+const $event = new EventEmitter();
 
 /***************************
  * 
@@ -41,6 +44,45 @@ app.put('/api/user/:id', function (req, res) {
       });
     })
     .catch(error => { res.send({ error }); });
+});
+
+
+const MAX_VOTES = 3;
+
+app.put('/api/user/vote/:userId/', function (req, res) {
+  const userId = req.params.userId;
+  const candidateId = req.body.candidateId;
+
+  (async function () {
+    let user = await DB.user.findOne(userId);
+    let candidate = await DB.candidate.findOne(candidateId);
+    let code = 'NOTHING';
+
+    let votes = user.votes;
+    const idx = votes.indexOf(candidateId);
+    if (idx < 0) {     // VOTE
+      if (votes.length < MAX_VOTES) {
+        // VOTE
+        votes.push(candidateId);
+        await DB.user.update(userId, { votes });
+        await DB.candidate.update(candidateId, { vote: candidate.vote + 1 });
+        user = await DB.user.findOne(userId);
+        candidate = await DB.candidate.findOne(candidateId);
+        code = 'VOTE';
+      }
+    } else {                                  // UNVOTE
+      // UNVOTE
+      votes.splice(idx, 1);
+      console.log('UNVOTE', 'votes', idx, votes);
+      await DB.user.update(userId, { votes });
+      await DB.candidate.update(candidateId, { vote: candidate.vote - 1 });
+      user = await DB.user.findOne(userId);
+      candidate = await DB.candidate.findOne(candidateId);
+      code = 'UNVOTE';
+    }
+
+    res.send({ user, candidate, code });
+  })();
 });
 
 
@@ -92,6 +134,19 @@ app.delete('/api/candidate/:id', function (req, res) {
     });
 });
 
+app.put('/api/candidate/like/:id', function (req, res) {
+  const id = req.params.id;
+
+  (async function () {
+    const curr = await DB.candidate.findOne(id);
+    await DB.candidate.update(id, { like: curr.like + 1 });
+    const next = await DB.candidate.findOne(id);
+
+    $event.emit('like', { candidateId: id });
+
+    res.send(next);
+  })();
+});
 
 /***************************
  * 
@@ -133,3 +188,7 @@ app.post('/api/upload', function (req, res) {
 app.listen(port, function() {
   console.log('chat-server api is listening ', port);
 });
+
+module.exports = {
+  $event,
+}
