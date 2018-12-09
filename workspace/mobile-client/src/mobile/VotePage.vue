@@ -3,6 +3,7 @@
   <div class="wrapper">
     <div class="v-header">
       <div class="title">BEST DRESSED AWARD</div>
+      <div class="back" v-on:click="onBackClick"></div>
     </div>
     <div class="v-content">
       <div class="card-row" v-for="(candidate, idx) in candidates" :key="idx">
@@ -19,7 +20,7 @@
 </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import API from '../services/API/index.js';
 import candidate from '../store/modules/candidate.js';
 
@@ -72,6 +73,9 @@ export default {
     API.candidate.requestGetAll();
   },
   methods: {
+    ...mapActions('mobile', [
+      'deactivateVotePage',
+    ]),
     onHeartClick(_id) {
       if (this.heartEnabled) {
         this.heartEnabled = false;
@@ -86,6 +90,9 @@ export default {
         .then((result) => {
           console.log(result);
         })
+    },
+    onBackClick() {
+      this.deactivateVotePage();
     },
   },
 };
@@ -107,7 +114,7 @@ function loadImage(url) {
 .vote-popup {
   position: absolute;
   left: 0;
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   background-color: #17141f;
@@ -141,6 +148,15 @@ function loadImage(url) {
   font-family: 'NotoSans-Bold';
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #f0d78c;
+}
+
+.vote-popup .wrapper .v-header .back {
+  position: absolute;
+  left: 24px;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: grey;
 }
 
 .vote-popup .wrapper .v-content {

@@ -8,7 +8,7 @@
           <p>THE GREAT VDUX</p>
         </div>
         <div class="ui-nickname">
-          <input type="text" placeholder="닉네임을 입력하세요" />
+          <input type="text" placeholder="닉네임을 입력하세요" :value="nickname" />
         </div>
         <div class="ui-enter">
           <div class="btn" v-on:click="handleEnter">입장하기</div>
@@ -18,7 +18,7 @@
   </transition>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import API from '../services/API/index.js';
 
 export default {
@@ -29,6 +29,9 @@ export default {
     }),
   },
   methods: {
+    ...mapActions('mobile', [
+      'activateChatPage',
+    ]),
     ...mapActions('user', {
       updateUser: 'update',
     }),
@@ -37,10 +40,13 @@ export default {
       const value = $input.value;
       if (!value) {
         alert('원하는 닉네임을 입력해주세요.');
-      } else if (value.length > 8) {
-        alert('닉네임은 최대 8자까지 입력할 수 있습니다.');
+      } else if (value.length > 20) {
+        alert('닉네임은 최대 20자까지 입력할 수 있습니다.');
       } else {
-        API.user.requestUpdate(this.userId, { nickname: value });
+        API.user.requestUpdate(this.userId, { nickname: value })
+          .then(() => {
+            this.activateChatPage();
+          });
       }
       console.log(value, value.length);
     },
@@ -54,6 +60,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
+  background-color: #17141f;
   display: flex;
   align-items: center;
 }

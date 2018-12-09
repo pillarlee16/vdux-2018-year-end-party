@@ -80,51 +80,7 @@ export default {
     document.addEventListener('touchmove', this.onTouchmove);
     document.addEventListener('touchend', this.onTouchend);
 
-    // $wrap.addEventListener('mousemove', this.onMousemove);
-    // $wrap.addEventListener('mouseup', this.onMouseup);
-
-    // this.$el.addEventListener('scroll', this.handleScroll.bind(this));
-    // const wrap = this.$el;
-    // const slider = this.$el.querySelector('.slider');
-    // const sliderStyler = this.sliderStyler = styler(slider);
-    // const sliderY = this.sliderY = value(0, sliderStyler.set('y'))
-
-    // const ctx = this;
-
-    // listen(wrap, 'mousedown touchstart').start(() => {
-    //   pointer({ y: ctx.sliderY.get() })
-    //     .pipe(({ y }) => y)
-    //     // .filter(v => { return v <= 0; })
-    //     .pipe(v => {
-    //       // Math.max(Math.min(v, 0)
-    //       // if (v < 0) {
-
-    //       // }
-    //       const v2 = Math.min(v, 0);
-    //       console.log(v, v2);
-    //       return v2;
-    //     })
-    //     .start(sliderY);
-    // });
-      
-    // listen(document, 'mouseup touchend').start(() => {
-    //   decay({
-    //     from: ctx.sliderY.get(),
-    //     velocity: ctx.sliderY.getVelocity()
-    //   })
-    //   // .pipe(v => {
-    //   //   const v2 = Math.min(v, 0);
-    //   //   console.log(v, v2);
-    //   //   return v2;
-    //   // })
-    //   .filter(v => { return v <= 0 })
-    //   .start(sliderY);
-    // });
-
-    // // sliderStyler.set({ y: -300 });
-
     this.updateSlider();
-    // sliderStyler.render();
   },
   beforeDestroy() {
     const $wrap = this.$el;

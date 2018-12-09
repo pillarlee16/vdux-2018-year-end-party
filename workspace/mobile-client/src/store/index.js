@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import user from './modules/user.js';
 import candidate from './modules/candidate.js';
+import mobile from './modules/mobile.js';
 
 Vue.use(Vuex)
 
@@ -42,6 +43,9 @@ const $store = window.$store = new Vuex.Store({
     SET_VIEWPORT_HEIGHT(state, value) {
       state.viewportHeight = value;
     },
+    SET_MOBILE_PAGE(state, value) {
+      state.mobilePage = value;
+    },
   },
   actions: {
     updateScreenSize({ commit }, payload) {
@@ -54,6 +58,7 @@ const $store = window.$store = new Vuex.Store({
   modules: {
     user,
     candidate,
+    mobile,
   },
 })
 

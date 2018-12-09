@@ -2,6 +2,7 @@
   <div class="chat-input">
     <form>
       <input class="input-message" type="text" placeholder="여기에 메시지를 남기세요."/>
+      <div class="btn-send" v-on:click="handleSubmit">보내기</div>
       <!-- <input class="btn-send" type="submit" value="SEND" /> -->
     </form>
   </div>
@@ -22,8 +23,6 @@ export default {
 
       const value = $input.value;
 
-
-      if (!value) return;
       if (value.startsWith('!')) {
         const tokens = value.split(' ');
         console.log(tokens);
@@ -47,18 +46,18 @@ export default {
 
 
       $input.value = '';
+      $input.focus();
     }
   }
 }
 </script>
 <style>
 .chat-input {
-  position: fixed;
+  position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
   height: 52px;
-  /* background-color: blue; */
   border-top: 1px solid rgba(255, 255, 255, 0.4);
 }
 
@@ -82,10 +81,11 @@ export default {
 
 .chat-input .btn-send {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 80px;
-  height: 40px;
+  right: 24px;
+  height: 52px;
+  line-height: 52px;
+  font-family: 'NotoSans-Bold';
+  color: rgb(231, 172, 255);
   /* background-color: gold; */
 }
 </style>

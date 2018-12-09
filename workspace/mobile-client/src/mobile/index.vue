@@ -1,14 +1,14 @@
 <template>
   <div id="mobile">
-    <template v-if="isReady">
-      <home v-if="!isLogin"></home>
-      <template v-if="isLogin">
-        <app-header></app-header>
-        <chat-list></chat-list>
-        <chat-input></chat-input>
-      </template>
-    </template>
-        <!-- <vote-popup></vote-popup> -->
+    <transition name="page-show">
+      <login-page v-if="loginPageActive"></login-page>
+    </transition>
+    <transition name="page-show">
+      <chat-page v-if="chatPageActive"></chat-page>
+    </transition>
+    <transition name="page-show">
+      <vote-page v-if="votePageActive"></vote-page>
+    </transition>
     <!-- <div class="test">
       <ul>
         <li>screenWidth: {{ screenWidth }}</li>
@@ -21,12 +21,9 @@
 </template>
 
 <script>
-import AppHeader from './AppHeader.vue';
-import ChatList from './ChatList.vue';
-import ChatInput from './ChatInput.vue';
-import VotePopup from './VotePopup.vue';
-import ChatService from '../services/ChatService.js';
-import Home from './Home.vue';
+import LoginPage from './LoginPage.vue';
+import ChatPage from './ChatPage.vue';
+import VotePage from './VotePage.vue';
 
 import axios from 'axios';
 
@@ -48,6 +45,11 @@ export default {
       'viewportWidth',
       'viewportHeight',
     ]),
+    ...mapState('mobile', [
+      'loginPageActive',
+      'chatPageActive',
+      'votePageActive',
+    ]),
     ...mapState('user', {
       userId: (state) => state._id,
       nickname: (state) => state.nickname,
@@ -66,21 +68,21 @@ export default {
     const id = localStorage.getItem('vdux_user_id');
 
     console.log(PREFIX, 'vdux_user_id at localStorage', id);
+
     if (!id) {
       API.user.requestCreate().then((data) => {
         console.log(PREFIX, 'data', data);
         localStorage.setItem('vdux_user_id', data._id);
-        this.isReady = true;
       });
     } else {
       API.user.requestGetOne(id)
-        .then(() => {
-          this.isReady = true;
+        .catch(() => {
+          localStorage.clear();
+          API.user.requestCreate().then((data) => {
+            console.log(PREFIX, 'data', data);
+            localStorage.setItem('vdux_user_id', data._id);
+          });
         })
-        .catch((err) => {
-          window.localStorage.clear();
-          location.reload();
-        });
     }
   },
   mounted() {
@@ -104,11 +106,9 @@ export default {
     },
   },
   components: {
-    AppHeader,
-    ChatList,
-    ChatInput,
-    VotePopup,
-    Home,
+    LoginPage,
+    ChatPage,
+    VotePage,
   }
 }
 </script>
@@ -135,5 +135,19 @@ body {
   top: 0;
   color: white;
   pointer-events: none;
+}
+
+.page-show-enter, .page-show-leave-to {
+  opacity: 0;
+  transform: translate3d(50vw, 0, 0);
+}
+
+.page-show-enter-to, .page-show-leave {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.page-show-enter-active, .page-show-leave-active {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 </style>
