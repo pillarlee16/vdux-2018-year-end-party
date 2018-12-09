@@ -1,5 +1,5 @@
 <template>
-<div class="vote-popup">
+<div class="vote-popup" :style="pageStyle">
   <div class="wrapper">
     <div class="v-header">
       <div class="title">BEST DRESSED AWARD</div>
@@ -31,6 +31,14 @@ export default {
     };
   },
   computed: {
+    ...mapState([
+      'viewportWidth',
+      'viewportHeight',
+    ]),
+    pageStyle() {
+      return `width: ${this.viewportWidth}px; height: ${this.viewportHeight}px`;
+    },
+
     ...mapState([
       'viewportWidth',
     ]),

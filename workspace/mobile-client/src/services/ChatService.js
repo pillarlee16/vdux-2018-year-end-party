@@ -56,6 +56,20 @@ export default new Vue({
         socket.emit('message-to-server', message);
       }
     },
+    sendSystem(text) {
+      if (!text) return;
+
+      const socket = this.socket;
+      if (socket && socket.connected) {
+        const message = {
+          nickname: 'SYSTEM',
+          nicknameColor: 'bluegrey',
+          text,
+        };
+        this.addMessage({ ...message });
+        socket.emit('message-to-server', message);
+      }
+    },
     ...mapMutations([
       'addMessage',
     ]),

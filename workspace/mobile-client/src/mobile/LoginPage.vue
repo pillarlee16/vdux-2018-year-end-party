@@ -20,6 +20,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
 import API from '../services/API/index.js';
+import ChatService from '../services/ChatService';
 
 export default {
   computed: {
@@ -44,11 +45,20 @@ export default {
         alert('닉네임은 최대 20자까지 입력할 수 있습니다.');
       } else {
         API.user.requestUpdate(this.userId, { nickname: value })
-          .then(() => {
-            this.activateChatPage();
-          });
+          .then(() => { this.afterLogin(value); });
       }
       console.log(value, value.length);
+    },
+    afterLogin(nickname) {
+      const localStorage = window.localStorage;
+      const visited = localStorage.getItem('vdux_visited');
+
+      if (!visited) {
+        ChatService.sendSystem(`${nickname}님이 입장하였습니다.`);
+        localStorage.setItem('vdux_visited', '1');
+      }
+
+      this.activateChatPage();
     },
   },
 }

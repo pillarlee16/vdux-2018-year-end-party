@@ -281,4 +281,5 @@ function hasTouchSupport() {
 .amber { color: #FFD740; }
 .orange { color: #FFAB40; }
 .deeporange { color: #FF6E40; }
+.bluegrey { color: #455A64; }
 </style>
