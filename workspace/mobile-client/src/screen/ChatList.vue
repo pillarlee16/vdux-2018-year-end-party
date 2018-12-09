@@ -1,9 +1,13 @@
 <template>
   <div class="chat-list">
     <div class="slider" :style="sliderStyle">
-      <p v-for="(msg, idx) in messages" :key="idx">
-        <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
-      </p>
+      <transition-group name="show">
+        <div class="chat-box" v-for="(msg, idx) in messages" :key="idx">
+          <div class="chat-box-inner">
+            <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
+          </div>
+        </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -93,17 +97,27 @@ export default {
   width: 600px;
   height: 800px;
   box-sizing: border-box;
-  padding-top: 8px;
   /* background-color: grey; */
   overflow: scroll;
-  background-color: rgba(255, 255, 255, 0.1);
+  /* background-color: rgba(255, 255, 255, 0.1); */
 }
 .chat-list::-webkit-scrollbar {
   display: none;
 }
 
 
-.chat-list p {
+.chat-list .chat-box {
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.chat-list .chat-box:first-child {
+  margin-top: 0;
+}
+
+.chat-list .chat-box-inner {
+  position: relative;
   width: 100%;
   padding-left: 16px;
   padding-top: 4px;
@@ -112,13 +126,38 @@ export default {
   line-height: 60px;
   font-size: 36px;
   color: rgba(255, 255, 255, 1);
+  background-color: rgba(60, 60, 60, 0.7);
+  border-radius: 12px;
   box-sizing: border-box;
   word-break: break-all;
 }
 
-.chat-list p .nickname {
+.chat-list .chat-box .nickname {
   font-family: 'NotoSans-Bold';
   opacity: 0.85;
+}
+
+.show-enter {
+  opacity: 0;
+}
+.show-enter-to {
+  opacity: 1;
+}
+.show-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+
+
+.show-enter .chat-box-inner {
+  transform: translateY(30px);
+}
+
+.show-enter-to .chat-box-inner {
+  transform: translateY(0px);
+}
+
+.show-enter-active .chat-box-inner {
+  transition: transform 0.3s ease-out;
 }
 
 .red { color: #FF5252; }
