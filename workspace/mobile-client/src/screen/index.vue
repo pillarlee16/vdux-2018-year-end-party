@@ -1,19 +1,19 @@
 <template>
   <div id="screen">
     <camera-view></camera-view>
-    <chat-list></chat-list>
+    <chat-view></chat-view>
     <like-view></like-view>
   </div>
 </template>
 
 <script>
 import CameraView from './CameraView.vue';
-import ChatList from './ChatList.vue';
+import ChatView from './ChatView.vue';
 import LikeView from './LikeView.vue';
 
 export default {
   components: {
-    ChatList,
+    ChatView,
     CameraView,
     LikeView,
   }

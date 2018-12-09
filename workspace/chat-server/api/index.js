@@ -10,7 +10,7 @@ const EventEmitter = require('events');
 
 app.use(cors());
 app.use(express.json());
-app.use('/static', express.static(path.resolve(__dirname, '../static')));
+
 
 const PREFIX = '[SERVER/API]';
 
@@ -154,7 +154,10 @@ app.put('/api/candidate/like/:id', function (req, res) {
  * 
  ***************************/
 
-const UPDATE_DIR = path.resolve(__dirname, '../static');
+const UPDATE_DIR = path.resolve(__dirname, '../../../resources');
+
+app.use('/resources', express.static(UPDATE_DIR));
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, UPDATE_DIR);
@@ -178,7 +181,7 @@ app.post('/api/upload', function (req, res) {
 
     const file = req.files[0];
     const filename = file.filename;
-    const url = `http://localhost:3006/static/${file.filename}`;
+    const url = `http://vdux.iptime.org:3006/resources/${file.filename}`;
 
     res.send({ url, filename });
   });

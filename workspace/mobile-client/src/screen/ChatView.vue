@@ -1,15 +1,17 @@
 <template>
-  <div class="chat-list">
-    <div class="slider" :style="sliderStyle">
-      <transition-group name="show">
-        <div class="chat-box" v-for="(msg, idx) in messages" :key="idx">
-          <div class="chat-box-inner">
-            <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
+  <div class="chat-view">
+    <div class="chat-list">
+      <div class="slider" :style="sliderStyle">
+        <transition-group name="show">
+          <div class="chat-box" v-for="(msg, idx) in messages" :key="idx">
+            <div class="chat-box-inner">
+              <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
+            </div>
           </div>
-        </div>
-      </transition-group>
+        </transition-group>
+      </div>
     </div>
-  </div>
+    </div>
 </template>
 <script>
 import { mapState } from 'vuex';
@@ -54,7 +56,9 @@ export default {
   created() {
   },
   mounted() {
-    // this.$el.addEventListener('scroll', this.handleScroll.bind(this));
+    this.$list = this.$el.querySelector('.chat-list');
+    this.$slider = this.$el.querySelector('.slider');
+
     this.updateSlider();
   },
   watch: {
@@ -65,58 +69,55 @@ export default {
     },
   },
   methods: {
-    handleScroll(evt) {
-      console.log(evt);
-      const $el = this.$el;
-      // $el.scrollTop = $el.scrollHeight - $el.clientHeight;
-
-      // this.scrollLocked = ($el.scrollHeight - $el.clientHeight !== $el.scrollTop);
-    },
     updateSlider() {
-      this.visibleHeight = this.$el.clientHeight;
-      this.scrollHeight = this.$el.querySelector('.slider').clientHeight;
+      this.visibleHeight = this.$list.clientHeight;
+      this.scrollHeight = this.$slider.clientHeight;
     },
     scrollToBottom() {
-      this.scrollHeight = this.$el.querySelector('.slider').clientHeight;
+      this.scrollHeight = this.$slider.clientHeight;
       if (this.scrollHeight < this.visibleHeight) {
-        this.$el.scrollTop = 0;
-        // this.scrollY = 0;
+        this.$list.scrollTop = 0;
       } else {
-        this.$el.scrollTop = this.scrollHeight - this.visibleHeight;
-        // this.scrollY = this.visibleHeight - this.scrollHeight;
+        this.$list.scrollTop = this.scrollHeight - this.visibleHeight;
       }
     },
   },
 }
 </script>
 <style scoped>
-.chat-list {
+.chat-view {
   position: absolute;
   right: 100px;
   top: 48px;
   width: 600px;
   height: 800px;
-  box-sizing: border-box;
-  /* background-color: grey; */
-  overflow: scroll;
-  /* background-color: rgba(255, 255, 255, 0.1); */
+  /* overflow: scroll; */
+  overflow: hidden;
 }
-.chat-list::-webkit-scrollbar {
+
+.chat-view .chat-list {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.chat-view .chat-list::-webkit-scrollbar {
   display: none;
 }
 
 
-.chat-list .chat-box {
+.chat-view .chat-box {
   position: relative;
   width: 100%;
   margin-top: 12px;
 }
 
-.chat-list .chat-box:first-child {
+.chat-view .chat-box:first-child {
   margin-top: 0;
 }
 
-.chat-list .chat-box-inner {
+.chat-view .chat-box-inner {
   position: relative;
   width: 100%;
   padding-left: 16px;
@@ -132,7 +133,7 @@ export default {
   word-break: break-all;
 }
 
-.chat-list .chat-box .nickname {
+.chat-view .chat-box .nickname {
   font-family: 'NotoSans-Bold';
   opacity: 0.85;
 }

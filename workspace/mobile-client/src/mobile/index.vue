@@ -85,25 +85,11 @@ export default {
         })
     }
   },
-  mounted() {
-    this.onResize();
-    window.addEventListener('resize', this.onResize.bind(this));
-  },
   methods: {
-    ...mapActions([
-      'updateScreenSize',
-    ]),
     ...mapActions('user', {
       updateUser: 'update',
     }),
-    onResize() {
-      this.updateScreenSize({
-        screenWidth: window.screen.width,
-        screenHeight: window.screen.height,
-        viewportWidth: window.innerWidth,
-        viewportHeight: window.innerHeight,
-      });
-    },
+    
   },
   components: {
     LoginPage,
