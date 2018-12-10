@@ -37,20 +37,26 @@ export default {
 
 .app-header .back {
   position: absolute;
-  left: 24px;
-  top: 12px;
-  width: 24px;
-  height: 24px;
-  background-color: grey;
+  left: 12px;
+  top: 0px;
+  width: 48px;
+  height: 48px;
+  background-image: url('/images/icon_back.png');
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  background-position: 12px 12px;
 }
 
 .app-header .vote {
   position: absolute;
-  right: 24px;
-  top: 12px;
-  width: 24px;
-  height: 24px;
-  background-color: grey;
+  right: 12px;
+  top: 0px;
+  width: 48px;
+  height: 48px;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  background-position: 12px 12px;
+  background-image: url('/images/icon_suit.png');
 }
 
 .app-header .title {

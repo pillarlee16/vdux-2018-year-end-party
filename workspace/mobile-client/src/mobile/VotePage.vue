@@ -160,11 +160,14 @@ function loadImage(url) {
 
 .vote-popup .wrapper .v-header .back {
   position: absolute;
-  left: 24px;
-  top: 12px;
-  width: 24px;
-  height: 24px;
-  background-color: grey;
+  left: 12px;
+  top: 0px;
+  width: 48px;
+  height: 48px;
+  background-image: url('/images/icon_back.png');
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  background-position: 12px 12px;
 }
 
 .vote-popup .wrapper .v-content {
@@ -195,12 +198,17 @@ function loadImage(url) {
   width: 100%;
   height: 64px;
   margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
 }
 
 .vote-popup .card-row .name {
   position: absolute;
-  top: 16px;
+  top: 0;
   left: 24px;
+  height: 64px;
+  line-height: 64px;
+  font-size: 20px;
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -209,22 +217,28 @@ function loadImage(url) {
   position: absolute;
   top: 16px;
   right: 72px;
-  background-color: red;
+  /* background-color: red; */
   width: 32px;
   height: 32px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url('/images/icon_heart.png');
 }
 
 .vote-popup .card-row .btn-ballon {
   position: absolute;
   top: 16px;
   right: 24px;
-  background-color: blue;
+  /* background-color: blue; */
   width: 32px;
   height: 32px;
   box-sizing: border-box;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url('/images/icon_star.png');
 }
 
 .vote-popup .card-row .btn-ballon.checked {
-  border: 2px solid white;
+  background-image: url('/images/icon_star_checked.png');
 }
 </style>
