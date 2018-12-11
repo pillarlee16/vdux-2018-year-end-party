@@ -24,15 +24,18 @@ export default new Vue({
     }
     this.onMessage = this.handleMessage.bind(this);
     this.onLike = this.handleLike.bind(this);
+    this.onVote = this.handleVote.bind(this);
 
     socket.on('connect', this.onConnect);
     socket.on('message-to-client', this.onMessage);
     socket.on('like-to-client', this.onLike);
+    socket.on('vote-to-client', this.onVote);
   },
   destroyed() {
     this.socket.off('connect', this.onConnect);
     this.socket.off('message-to-client', this.onMessage);
     this.socket.off('like-to-client', this.onLike);
+    this.socket.off('vote-to-client', this.onVote);
   },
   methods: {
     handleMessage(data) {
@@ -42,6 +45,10 @@ export default new Vue({
     handleLike(data) {
       console.log('handleLike', data);
       this.$emit('like', data);
+    },
+    handleVote(data) {
+      console.log('handleVote', data);
+      this.$emit('vote', data);
     },
     send(text) {
       if (!text) return;

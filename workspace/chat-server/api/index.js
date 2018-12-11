@@ -69,6 +69,8 @@ app.put('/api/user/vote/:userId/', function (req, res) {
         user = await DB.user.findOne(userId);
         candidate = await DB.candidate.findOne(candidateId);
         code = 'VOTE';
+
+        $event.emit('vote', { candidateId });
       }
     } else {                                  // UNVOTE
       // UNVOTE

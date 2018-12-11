@@ -9,12 +9,12 @@ Vue.use(Vuex)
 
 const $store = window.$store = new Vuex.Store({
   state: {
-    // hostname: 'localhost',
+    hostname: 'localhost',
     screenWidth: null,
     screenHeight: null,
     viewportWidth: null,
     viewportHeight: null,
-    hostname: 'vdux.iptime.org',
+    // hostname: 'vdux.iptime.org',
     messages: [],
     message: null,
   },

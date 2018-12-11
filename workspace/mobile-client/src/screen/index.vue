@@ -10,6 +10,7 @@
 import CameraView from './CameraView.vue';
 import ChatView from './ChatView.vue';
 import LikeView from './LikeView.vue';
+import CandidateView from './CandidateView.vue';
 
 export default {
   components: {

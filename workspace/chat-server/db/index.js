@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+
+const PREFIX = '[DB]'
+
 const colors = [ 'red', 'pink', 'purple', 'deeppurple', 'indigo', 'blue', 'lightblue', 'cyan', 'teal', 'green', 'lightgreen', 'lime', 'yellow', 'amber', 'orange', 'deeporange' ];
 
 let _db = null;
@@ -60,7 +63,10 @@ const user = {
         dressVote: -1,
         donation: 20000,
       }, function (err, user) {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+          return;
+        }
         resolve(user);
       });
     });
@@ -69,8 +75,18 @@ const user = {
     return new Promise((resolve, reject) => {
       if (!_User) reject();
     
-      _User.findOne({ _id }, function (err, raw) {
-        if (err) reject(err);
+      console.log(PREFIX, 'user.findOne invoked', _id);
+      _User.findById(_id, function (err, raw) {
+        console.log(PREFIX, 'user.findOne callback', _id, err, raw);
+        if (err) {
+          reject(err);
+          return;
+        }
+        if (!raw) {
+          reject(`Cannot find "${_id}" user`);
+          return;
+        }
+
         resolve(raw);
       });
     });
@@ -80,7 +96,10 @@ const user = {
       if (!_User) reject();
   
       _User.updateOne({ _id }, props, null, function (err, raw) {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+          return;
+        }
         resolve(raw);
       });
     });
@@ -99,7 +118,10 @@ const candidate = {
         like: 0,
         vote: 0,
       }, function (err, user) {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+          return;
+        }
         resolve(user);
       });
     });
@@ -109,7 +131,10 @@ const candidate = {
       if (!_Candidate) reject();
   
       _Candidate.updateOne({ _id }, props, null, function (err, raw) {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+          return;
+        }
         resolve(raw);
       });
     });
@@ -118,8 +143,14 @@ const candidate = {
     return new Promise((resolve, reject) => {
       if (!_Candidate) reject();
     
-      _Candidate.findOne({ _id }, function (err, raw) {
-        if (err) reject(err);
+      _Candidate.findById(_id, function (err, raw) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        if (!raw) {
+          reject(`Cannot find "${_id}" candidate`);
+        }
         resolve(raw);
       });
     });
@@ -129,7 +160,10 @@ const candidate = {
       if (!_Candidate) reject();
 
       _Candidate.find(null, null, null, function (err, raw) {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+          return;
+        }
         resolve(raw);
       });
     });
@@ -139,7 +173,10 @@ const candidate = {
       if (!_Candidate) reject();
 
       _Candidate.deleteOne({ _id }, function (err, raw) {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+          return;
+        }
         resolve(raw);
       });
     });

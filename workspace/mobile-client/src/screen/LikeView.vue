@@ -11,10 +11,12 @@ import { TweenMax } from 'gsap';
 export default {
   created() {
     ChatService.$on('like', this.onLike);
+    ChatService.$on('vote', this.onVote);
     Keyboard.$on('keydown', this.onKeydown);
   },
   destroyed() {
     ChatService.$off('like', this.onLike);
+    ChatService.$off('vote', this.onVote);
     Keyboard.$off('keydown', this.onKeydown);
   },
   methods: {
@@ -66,6 +68,9 @@ export default {
 
 
       console.log('LikeView', data);
+    },
+    onVote(data) {
+      console.log('onVote', data);
     },
     onKeydown(key) {
       console.log(key);

@@ -30,7 +30,7 @@ import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
 import API from '../services/API/index.js';
 
-const PREFIX = '[mobile/index]';
+const PREFIX = '[Mobile/index]';
 
 export default {
   data() {
@@ -71,13 +71,16 @@ export default {
 
     if (!id) {
       API.user.requestCreate().then((data) => {
-        console.log(PREFIX, 'data', data);
+        console.log(PREFIX, 'requested the server to create a new user', data);
         localStorage.setItem('vdux_user_id', data._id);
+        console.log(PREFIX, 'then stored id to localStorage', data._id);
       });
     } else {
       API.user.requestGetOne(id)
         .catch(() => {
+          console.log(PREFIX, 'tried to get user from server, but there is an error', id);
           localStorage.clear();
+          console.log(PREFIX, 'so cleared localStorage and then requested to create a new user again');
           API.user.requestCreate().then((data) => {
             console.log(PREFIX, 'data', data);
             localStorage.setItem('vdux_user_id', data._id);

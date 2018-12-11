@@ -26,6 +26,12 @@ API.$event.on('like', function (data) {
   // socket.broadcast.emit('like-to-client', data);
 });
 
+API.$event.on('vote', function (data) {
+  console.log('vote', data);
+  io.sockets.emit('vote-to-client', data);
+  // socket.broadcast.emit('like-to-client', data);
+});
+
 // socket.broadcast.emit  --- send a message to all except the one sent the message.
 // io.sockets.emit  ---  send a message to all sockets connected now.
 
