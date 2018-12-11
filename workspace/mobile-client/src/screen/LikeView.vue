@@ -65,12 +65,52 @@ export default {
           }});
         }}
       );
-
-
       console.log('LikeView', data);
     },
     onVote(data) {
       console.log('onVote', data);
+
+      const $el = this.$el;
+      const boundary = $el.getBoundingClientRect();
+
+      const $ballon = document.createElement('div');
+      const offsetX = boundary.left + (boundary.left + boundary.width) * Math.random();
+      const offsetY = boundary.top + (boundary.top + boundary.height) * Math.random();
+
+      $ballon.style.cssText = `
+        position: absolute;
+        left: ${offsetX}px;
+        top: ${offsetY}px;
+        width: 240px;
+        height: 200px;
+        box-sizing: border-box;
+        overflow: hidden;
+        opacity: 0;
+        transform-origin: top;
+      `;
+
+      const images = ['one_ballon.png', 'two_ballons.png', 'three_ballons.png'];
+      const imageName = images[Math.floor(Math.random() * 3)];
+      const $img = document.createElement('img');
+      $img.src = `/images/${imageName}`;
+      $img.style.cssText = `
+        position: relative;
+        width: 100%;
+        height: 100%;
+      `
+      $ballon.appendChild($img);
+      $el.appendChild($ballon);
+
+      TweenMax.fromTo(
+        $ballon,
+        0.6,
+        { y: 30, opacity: 0, scale: 0.5 },
+        { y: -30, opacity: 1, scale: 1, ease: Power2.easeOut, onComplete: () => {
+          TweenMax.to($ballon, 0.3, { opacity: 0, scale: 0, delay: 0.1, onComplete: () => {
+            $ballon.remove();
+          }});
+        }}
+      );
     },
     onKeydown(key) {
       console.log(key);
