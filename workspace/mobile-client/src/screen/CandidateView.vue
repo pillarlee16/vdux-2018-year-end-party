@@ -1,5 +1,5 @@
 <template>
-<div class="candidate-view">
+<div class="candidate-view" :style="viewStyle">
   <div class="inner">
     <div class="grid">
       <div class="grid-box" v-for="(obj, idx) in candidates" :key="idx">
@@ -14,10 +14,19 @@ import { mapState } from 'vuex';
 import API from '../services/API/index.js';
 
 export default {
+  props: {
+    active: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     ...mapState('candidate', [
       'candidates',
     ]),
+    viewStyle() {
+      return `visibility: ${this.active ? 'visible' : 'hidden'};`;
+    },
   },
   created() {
     API.candidate.requestGetAll();

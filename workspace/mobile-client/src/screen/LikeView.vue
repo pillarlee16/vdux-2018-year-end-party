@@ -115,10 +115,10 @@ export default {
     onKeydown(key) {
       console.log(key);
       switch (key) {
-        case 'ONE':
+        case 'NINE':
           this.onLike();
           break;
-        case 'TWO':
+        case 'ZERO':
           this.onVote();
           break;
       }
