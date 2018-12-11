@@ -17,7 +17,6 @@ export default {
         console.log(PREFIX, 'get', url);
         axios.get(url)
           .then(res => {
-            debugger;
             const data = res.data;
             if (data.error) {
               reject(data.error);

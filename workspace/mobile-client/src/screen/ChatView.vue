@@ -87,7 +87,7 @@ export default {
 <style scoped>
 .chat-view {
   position: absolute;
-  right: 100px;
+  right: 54px;
   top: 48px;
   width: 600px;
   height: 800px;

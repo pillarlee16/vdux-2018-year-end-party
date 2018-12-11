@@ -114,7 +114,14 @@ export default {
     },
     onKeydown(key) {
       console.log(key);
-      this.onLike();
+      switch (key) {
+        case 'ONE':
+          this.onLike();
+          break;
+        case 'TWO':
+          this.onVote();
+          break;
+      }
     }
   },
 };
