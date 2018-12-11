@@ -7,10 +7,25 @@
 export default {
   data() {
     return {
-      offsetX: 100,
-      offsetY: 100,
-      width: 800,
-      height: 600,
+      offsetX: 54,
+      offsetY: 105,
+      width: 1160,
+      height: 870,
+
+      // offsetX: (1920 - 1440 * 0.9) / 2,
+      // offsetY: (1080 - 1080 * 0.9) / 2,
+      // width: 1440 * 0.9,
+      // height: 1080 * 0.9,
+
+      // offsetX: (1920 - 1440) / 2,
+      // offsetY: 0,
+      // width: 1440,
+      // height: 1080,
+
+      // offsetX: 0,
+      // offsetY: 0,
+      // width: 1440,
+      // height: 1080
     };
   },
   computed: {
@@ -42,7 +57,7 @@ export default {
   height: 300px; */
   background-color: rgba(255, 255, 255, 0.8);
   box-sizing: border-box;
-  border: 3px solid white;
+  /* border: 3px solid white; */
   background-image: url('/images/icon_camera.png')
 }
 
