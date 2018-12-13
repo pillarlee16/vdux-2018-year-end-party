@@ -1,48 +1,27 @@
 <template>
   <div class="chat-list" :style="wrapStyle">
-    <div class="slider" :style="sliderStyle">
-      <p v-for="(msg, idx) in messages" :key="idx">
-        <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
-      </p>
+    <div class="viewport">
+      <div class="slider">
+        <p v-for="(msg, idx) in messages" :key="idx">
+          <span class="nickname" :class="[ msg.nicknameColor ]">{{ msg.nickname }}</span>: <span class="msg">{{ msg.text }}</span>
+        </p>
+      </div>
     </div>
+    <div class="noti" v-if="shownNoti" v-on:click="scrollToBottom">메시지를 더 확인하려면 여기를 탭하세요</div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex';
-import { styler, listen, pointer, decay, value } from 'popmotion';
-
-const COLOR = {
-  RED: '#FF5252',
-  PINK: '#FF4081',
-  PURPLE: '#E040FB',
-  DEEPPURPLE: '#7C4DFF',
-  INDIGO: '#536DFE',
-  BLUE: '#448AFF',
-  LIGHTBLUE: '#40C4FF',
-  CYAN: '#18FFFF',
-  TEAL: '#64FFDA',
-  GREEN: '#69F0AE',
-  LIGHTGREEN: '#B2FF59',
-  LIME: '#EEFF41',
-  YELLOW: '#FFFF00',
-  AMBER: '#FFD740',
-  ORANGE: '#FFAB40',
-  DEEPORANGE: '#FF6E40',
-};
 
 const PREFIX = '[mobile/ChatList]';
 
 export default {
   data() {
     return {
-      scrollLocked: false,
-      scrollY: 0,
-      cacheScrollY: null,
-
       visibleHeight: 0,
       scrollHeight: 0,
-
-      touchY: null,
+      scrollEnd: 0,
+      scrollTop: 0,
     }
   },
   computed: {
@@ -50,51 +29,26 @@ export default {
       'messages',
       'viewportHeight',
     ]),
-    sliderStyle() {
-      // const scrollY = (this.cacheScrollY !== null) ? this.cacheScrollY : this.scrollY;
-      return `transform: translate3d(0, ${this.scrollY}px, 0)`;
-    },
     wrapStyle() {
       return `height: ${this.viewportHeight - 52 - 48}px;`;
     },
-  },
-  created() {
+    shownNoti() {
+      return this.scrollTop < (this.scrollEnd - 1);
+    },
   },
   mounted() {
-    const $wrap = this.$el;
+    const $viewport = this.$viewport = this.$el.querySelector('.viewport');
+    const $slider = this.$slider = this.$el.querySelector('.slider');
 
-    this.onMousedown = onMousedown.bind(this);
-    this.onMousemove = onMousemove.bind(this);
-    this.onMouseup = onMouseup.bind(this);
-    this.onTouchstart = onTouchstart.bind(this);
-    this.onTouchmove = onTouchmove.bind(this);
-    this.onTouchend = onTouchend.bind(this);
-
-    if (!hasTouchSupport()) {
-      $wrap.addEventListener('mousedown', this.onMousedown);
-      document.addEventListener('mousemove', this.onMousemove);
-      document.addEventListener('mouseup', this.onMouseup);
-    }
-
-    $wrap.addEventListener('touchstart', this.onTouchstart);
-    document.addEventListener('touchmove', this.onTouchmove);
-    document.addEventListener('touchend', this.onTouchend);
+    this.onScroll = onScroll.bind(this);
+    
+    $viewport.addEventListener('scroll', this.onScroll);
 
     this.updateSlider();
+    this.scrollToBottom();
   },
   beforeDestroy() {
-    const $wrap = this.$el;
-
-    if (!hasTouchSupport()) {
-      $wrap.removeEventListener('mousedown', this.onMousedown);
-      document.removeEventListener('mousemove', this.onMousemove);
-      document.removeEventListener('mouseup', this.onMouseup);
-    }
-      
-
-    $wrap.removeEventListener('touchstart', this.onTouchstart);
-    document.removeEventListener('touchmove', this.onTouchmove);
-    document.removeEventListener('touchend', this.onTouchend);
+    this.$viewport.removeEventListener('scroll', this.onScroll);
   },
   watch: {
     viewportHeight() {
@@ -104,128 +58,50 @@ export default {
       });
     },
     messages() {
+      const scrollEnd = this.scrollEnd;
+      const scrollTop = this.scrollTop;
+
+      let scrollFlag = false;
+
+      const last = this.messages[this.messages.length - 1];
+      if ((last && last.from === 'me') || (scrollTop >= scrollEnd)) {
+        scrollFlag = true;
+      }
+
       this.$nextTick(() => {
-        this.scrollToBottom();
+        if (scrollFlag) {
+          this.scrollToBottom();
+        }
       });
-      // const last = this.messages[this.messages.length - 1];
-      // if (last && last.from === 'me') {
-      //   this.scrollToBottom();
-      // } else {
-      //   const elementHeight = 32;
-      //   const scrollTop = this.$el.scrollTop;
-      //   const scrollHeight = this.$el.scrollHeight;
-      //   const clientHeight = this.$el.clientHeight;
-      //   console.log('data',scrollTop, scrollHeight, clientHeight, elementHeight);
-      //   console.log('data2', scrollHeight - clientHeight - scrollTop, elementHeight);
-      //   if (scrollHeight - clientHeight - scrollTop < elementHeight) {
-      //     this.scrollToBottom();
-      //   }
-      // }
     },
   },
   methods: {
-    touchStart(y) {
-      console.log(PREFIX, 'touchStart', y);
-
-      this.cacheScrollY = this.scrollY;
-      this.touchY = y;
-
-      console.log(this.cacheScrollY, this.touchY);
-    },
-    touchMove(y) {
-      if (this.touchY === null) return;
-
-      const delta = y - this.touchY;
-
-      if (this.scrollHeight < this.visibleHeight) {
-        this.scrollY = 0;
-      } else {
-        this.scrollY = this.cacheScrollY + delta;
-        this.scrollY = Math.min(this.scrollY, 0);
-        this.scrollY = Math.max(this.scrollY, this.visibleHeight - this.scrollHeight);
-      }
-
-      // this.scrollY = this.cacheScrollY + delta;
-      // if (this.scrollY > 0) {
-      //   this.scrollY = 0;
-      // } else {
-      //   if (this.scrollHeight > this.visibleHeight) {
-      //     this.scrollY = Math.max(this.scrollY, this.visibleHeight - this.scrollHeight);
-      //   }
-      // }
-      // this.scrollY = Math.min(this.scrollY, 0);
-      // this.scrollY = Math.max(this.scrollY, this.visibleHeight - this.scrollHeight);
-      console.log(this.cacheScrollY, y, this.touchY, delta);
-      console.log(PREFIX, 'touchMove', y, delta, this.scrollY);
-    },
-    touchEnd() {
-      console.log(PREFIX, 'touchEnd');
-
-      this.cacheScrollY = null;
-      this.touchY = null;
-    },
     updateSlider() {
       this.visibleHeight = this.$el.clientHeight;
       this.scrollHeight = this.$el.querySelector('.slider').clientHeight;
+      this.scrollEnd = this.scrollHeight - this.visibleHeight;
 
       console.log(PREFIX, 'updateSlider', 'visibleHeight', this.visibleHeight, 'scrollHeight', this.scrollHeight);
     },
-    handleScroll(evt) {
-      console.log(evt);
-      const $el = this.$el;
-      // $el.scrollTop = $el.scrollHeight - $el.clientHeight;
-
-      // this.scrollLocked = ($el.scrollHeight - $el.clientHeight !== $el.scrollTop);
-    },
     scrollToBottom() {
-      this.scrollHeight = this.$el.querySelector('.slider').clientHeight;
+      console.log(PREFIX, 'scrollToBottom', this.$el.scrollTop, this.scrollHeight, this.visibleHeight);
+      this.scrollHeight = this.$slider.clientHeight;
+      this.scrollEnd = this.scrollHeight - this.visibleHeight;
+
       if (this.scrollHeight < this.visibleHeight) {
-        this.scrollY = 0;
+        this.$viewport.scrollTop = this.scrollTop = 0;
       } else {
-        this.scrollY = this.visibleHeight - this.scrollHeight;
+        this.$viewport.scrollTop = this.scrollTop = this.scrollEnd;
       }
 
-      // const y = Math.max(this.scrollHeight - this.visibleHeight, 0);
-      // const y = Math.min(this.visibleHeight - this.scrollHeight, 0);
-      // // this.sliderY.set(y);
-
-      // this.sliderY = value(y, this.sliderStyler.set('y'))
-      // this.sliderStyler.set({ y });
-      // this.sliderStyler.render();
+      console.log(PREFIX, 'scrollToBottom', 'updated', this.$viewport.scrollTop);
     },
   },
 }
 
-function onMousedown(evt) {
-  this.touchStart(evt.clientY);
+function onScroll(evt) {
+  this.scrollTop = this.$viewport.scrollTop;  
 }
-
-function onMousemove(evt) {
-  this.touchMove(evt.clientY);
-}
-
-function onMouseup(evt) {
-  this.touchEnd();
-}
-
-function onTouchstart(evt) {
-  this.touchStart(evt.touches[0].clientY);
-}
-
-function onTouchmove(evt) {
-  this.touchMove(evt.touches[0].clientY);
-}
-
-function onTouchend(evt) {
-  this.touchEnd();
-}
-
-function hasTouchSupport() {
-  return ("ontouchstart" in window) || // touch events
-          (window.Modernizr && window.Modernizr.touch) || // modernizr
-          (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
-}
-
 
 </script>
 <style scoped>
@@ -237,14 +113,25 @@ function hasTouchSupport() {
   /* height: calc(100% - 52px - 48px); */
   box-sizing: border-box;
   /* background-color: grey; */
+  /* overflow: scroll; */
   overflow: hidden;
+}
+
+.chat-list .viewport {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
 }
 
 .chat-list .slider {
   position: absolute;
   left: 0;
   top: 0;
-  user-select: none; 
+  user-select: none;
+
 }
 
 .chat-list p {
@@ -263,6 +150,20 @@ function hasTouchSupport() {
 .chat-list p .nickname {
   font-family: 'NotoSans-Bold';
   opacity: 0.85;
+}
+
+.chat-list .noti {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  line-height: 40px;
+  text-align: center;
+  color: white;
+  box-sizing: border-box;
+  border: 4px solid #edcd6d;
+  background-color: rgba(32, 28, 43, 0.8);
 }
 
 .red { color: #FF5252; }
