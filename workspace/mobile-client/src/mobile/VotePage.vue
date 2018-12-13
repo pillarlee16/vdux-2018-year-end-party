@@ -11,8 +11,8 @@
         </div>
         <div class="bar">
           <div class="name">{{ candidate.name }}</div>
-          <div class="btn-heart" v-on:click="onHeartClick(candidate._id)"></div>
-          <div class="btn-ballon" :class="{ 'checked': votes.indexOf(candidate._id) >= 0 }" v-on:click="onBallonClick(candidate._id)"></div>
+          <div class="btn-heart" v-on:click="(evt) => { onHeartClick(evt, candidate._id) }"></div>
+          <div class="btn-ballon" :class="{ 'checked': votes.indexOf(candidate._id) >= 0 }" v-on:click="(evt) => { onBallonClick(evt, candidate._id) }"></div>
         </div>
       </div>
     </div>
@@ -23,6 +23,8 @@
 import { mapState, mapActions } from 'vuex';
 import API from '../services/API/index.js';
 import candidate from '../store/modules/candidate.js';
+
+import { TweenMax } from 'gsap';
 
 export default {
   data() {
@@ -84,16 +86,27 @@ export default {
     ...mapActions('mobile', [
       'deactivateVotePage',
     ]),
-    onHeartClick(_id) {
+    onHeartClick(evt, _id) {
+      console.log('heart', evt, _id);
       if (this.heartEnabled) {
         this.heartEnabled = false;
+
+        const $heart = evt.target;
+        TweenMax.to($heart, 0.1, { scale: 0.8, onComplete: function () {
+          TweenMax.to($heart, 0.1, { scale: 1 });
+        }});
 
         API.candidate.requestLike(_id)
           .then(() => { this.heartEnabled = true; })
           .catch(() => { this.heartEnabled = true; });
       }
     },
-    onBallonClick(candidateId) {
+    onBallonClick(evt, candidateId) {
+      const $ballon = evt.target;
+      TweenMax.to($ballon, 0.1, { scale: 0.8, onComplete: function () {
+        TweenMax.to($ballon, 0.1, { scale: 1 });
+      }});
+
       API.user.requestVote(this.userId, { candidateId })
         .then((result) => {
           console.log(result);
@@ -190,7 +203,7 @@ function loadImage(url) {
 .vote-popup .card-row .photo {
   position: relative;
   overflow: hidden;
-  background-color: grey;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .vote-popup .card-row .bar {
