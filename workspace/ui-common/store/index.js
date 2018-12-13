@@ -9,8 +9,8 @@ Vue.use(Vuex)
 
 const $store = window.$store = new Vuex.Store({
   state: {
-    hostname: 'localhost',
-    // hostname: 'uxpick.me',
+    // hostname: 'localhost',
+    hostname: 'uxpick.me',
     screenWidth: null,
     screenHeight: null,
     viewportWidth: null,
