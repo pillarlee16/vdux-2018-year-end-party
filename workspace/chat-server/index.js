@@ -4,7 +4,9 @@ const app = express();
 const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const port = 3005;
+const config = require('./config.js');
+
+const port = config.WEBSOCKET_PORT;
 
 const API = require('./api/index.js');
 

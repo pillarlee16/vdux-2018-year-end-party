@@ -4,7 +4,9 @@ const app = express();
 const cors = require('cors');
 const multer = require('multer');
 const uuidv1 = require('uuid/v1');
-const port = 3006;
+const config = require('../config.js');
+
+const port = config.API_PORT;
 const DB = require('../db/index.js');
 const EventEmitter = require('events');
 
@@ -183,7 +185,7 @@ app.post('/api/upload', function (req, res) {
 
     const file = req.files[0];
     const filename = file.filename;
-    const url = `http://vdux.iptime.org:3006/resources/${file.filename}`;
+    const url = `${config.API_SERVICE_URL}/resources/${file.filename}`;
 
     res.send({ url, filename });
   });
