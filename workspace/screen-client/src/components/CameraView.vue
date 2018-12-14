@@ -1,7 +1,7 @@
 <template>
   <div class="camera-view">
     <video autoplay :style="videoStyle"></video>
-    <img src="" :style="imageStyle"/>
+    <img src="/images/logo_vdux.png" :style="imageStyle"/>
   </div>
 </template>
 <script>
@@ -37,9 +37,9 @@ export default {
       },
       imageParam: {
         offsetX: 0,
-        offsetY: 1080 - 300,
+        offsetY: 1080 - 225,
         width: 400,
-        height: 300,
+        height: 225,
       },
     };
   },
@@ -95,6 +95,6 @@ export default {
 
 .camera-view img {
   position: absolute;
-  background-color: yellow;
+  /* background-color: yellow; */
 }
 </style>
