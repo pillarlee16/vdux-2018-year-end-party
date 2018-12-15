@@ -26,17 +26,20 @@ export default new Vue({
     this.onMessage = this.handleMessage.bind(this);
     this.onLike = this.handleLike.bind(this);
     this.onVote = this.handleVote.bind(this);
+    this.onThumb = this.handleThumb.bind(this);
 
     socket.on('connect', this.onConnect);
     socket.on('message-to-client', this.onMessage);
     socket.on('like-to-client', this.onLike);
     socket.on('vote-to-client', this.onVote);
+    socket.on('thumb-to-client', this.onThumb);
   },
   destroyed() {
     this.socket.off('connect', this.onConnect);
     this.socket.off('message-to-client', this.onMessage);
     this.socket.off('like-to-client', this.onLike);
     this.socket.off('vote-to-client', this.onVote);
+    this.socket.off('thumb-to-client', this.onThumb);
   },
   methods: {
     handleMessage(data) {
@@ -50,6 +53,10 @@ export default new Vue({
     handleVote(data) {
       console.log('handleVote', data);
       this.$emit('vote', data);
+    },
+    handleThumb() {
+      console.log('handleThumb');
+      this.$emit('thumb');
     },
     send(text) {
       if (!text) return;
@@ -76,6 +83,12 @@ export default new Vue({
         };
         this.addMessage({ ...message });
         socket.emit('message-to-server', message);
+      }
+    },
+    sendThumb() {
+      const socket = this.socket;
+      if (socket && socket.connected) {
+        socket.emit('thumb-to-server');
       }
     },
     ...mapMutations([

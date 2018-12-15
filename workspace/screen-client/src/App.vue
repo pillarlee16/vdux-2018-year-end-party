@@ -42,6 +42,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background-color: black;
+  overflow: hidden;
 }
 
 @font-face {

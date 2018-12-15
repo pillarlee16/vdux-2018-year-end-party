@@ -20,6 +20,9 @@ io.on('connection', (socket) => {
   socket.on('message-to-server', function (msg) {
     socket.broadcast.emit('message-to-client', msg);
   });
+  socket.on('thumb-to-server', function () {
+    socket.broadcast.emit('thumb-to-client');
+  });
 });
 
 API.$event.on('like', function (data) {

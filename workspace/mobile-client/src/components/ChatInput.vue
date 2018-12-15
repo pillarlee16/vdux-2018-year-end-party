@@ -2,6 +2,7 @@
   <div class="chat-input">
     <form>
       <input class="input-message" type="text" placeholder="여기에 메시지를 남기세요."/>
+      <div class="btn-thumb" v-on:click="handleThumb"></div>
       <div class="btn-send" v-on:click="handleSubmit">보내기</div>
       <!-- <input class="btn-send" type="submit" value="SEND" /> -->
     </form>
@@ -10,12 +11,22 @@
 <script>
 import ChatService from 'ui-common/services/ChatService.js';
 
+import { TweenMax } from 'gsap';
+
 export default {
   mounted() {
     const $form = this.$el.querySelector('form');
     $form.addEventListener('submit', this.handleSubmit.bind(this));
   },
   methods: {
+    handleThumb(event) {
+      const $thumb = event.target;
+      TweenMax.to($thumb, 0.1, { scale: 0.8, onComplete: function () {
+        TweenMax.to($thumb, 0.1, { scale: 1, onComplete: function () {
+          ChatService.sendThumb();
+        }});
+      }});
+    },
     handleSubmit(event) {
       event.preventDefault();
 
@@ -69,7 +80,8 @@ export default {
   padding: 0;
   margin: 0;
   border: none;
-  width: calc(100% - 140px);
+  /* border: 1px solid white; */
+  width: calc(100% - 134px);
   background: transparent;
   color: rgba(255, 255, 255, 0.8)
 
@@ -77,6 +89,21 @@ export default {
 
 .chat-input .input-message:focus {
   outline: none;
+}
+
+.chat-input .btn-thumb {
+  position: absolute;
+  top: 3px;
+  right: 68px;
+  width: 48px;
+  height: 48px;
+  background-image: url('/images/icon_thumb.png');
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: 12px 12px;
+  /* background-color: red; */
+  filter: invert(1);
+  opacity: 0.7;
 }
 
 .chat-input .btn-send {
