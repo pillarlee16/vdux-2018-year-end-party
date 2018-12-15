@@ -8,6 +8,7 @@
     <div class="v-content">
       <div class="card-row" v-for="(candidate, idx) in candidates" :key="idx">
         <div class="photo" :style="photoStyle">
+          <div class="photo-img" :style="`background-image: url('${candidate.imageUrl}')`"></div>
         </div>
         <div class="bar">
           <div class="name">{{ candidate.name }}</div>
@@ -55,30 +56,30 @@ export default {
       return `width: ${this.viewportWidth}px; height: ${this.viewportWidth}px;`;
     },
   },
-  watch: {
-    candidates() {
-      this.$nextTick(() => {
-        const vw = this.viewportWidth;
-        const candidates = this.candidates;
-        const $photos = this.$el.querySelectorAll('.photo');
+  // watch: {
+  //   candidates() {
+  //     this.$nextTick(() => {
+  //       const vw = this.viewportWidth;
+  //       const candidates = this.candidates;
+  //       const $photos = this.$el.querySelectorAll('.photo');
 
-        (async () => {
-          for (let i = 0; i < candidates.length; i++) {
-            const img = await loadImage(candidates[i].imageUrl);
-            const scale = (img.width >= img.height) ? vw / img.height : vw / img.width;
-            console.log(scale);
-            img.$el.style.position = 'absolute';
-            img.$el.style.left = '50%';
-            img.$el.style.top = '50%';
-            img.$el.style.transform = `translate3d(-50%, -50%, 0) scale(${scale})`;
+  //       (async () => {
+  //         for (let i = 0; i < candidates.length; i++) {
+  //           const img = await loadImage(candidates[i].imageUrl);
+  //           const scale = (img.width >= img.height) ? vw / img.height : vw / img.width;
+  //           console.log(scale);
+  //           img.$el.style.position = 'absolute';
+  //           img.$el.style.left = '50%';
+  //           img.$el.style.top = '50%';
+  //           img.$el.style.transform = `translate3d(-50%, -50%, 0) scale(${scale})`;
 
-            $photos[i].appendChild(img.$el);
-          }
-        })();
+  //           $photos[i].appendChild(img.$el);
+  //         }
+  //       })();
 
-      });
-    },
-  },
+  //     });
+  //   },
+  // },
   created() {
     API.candidate.requestGetAll();
   },
@@ -207,6 +208,15 @@ function loadImage(url) {
   position: relative;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.05);
+}
+
+.vote-popup .card-row .photo-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .vote-popup .card-row .bar {
