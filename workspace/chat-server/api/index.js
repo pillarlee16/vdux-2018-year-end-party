@@ -73,6 +73,8 @@ app.put('/api/user/vote/:userId/', function (req, res) {
         code = 'VOTE';
 
         $event.emit('vote', { candidateId });
+      } else {
+        code = 'EXCEED';
       }
     } else {                                  // UNVOTE
       // UNVOTE

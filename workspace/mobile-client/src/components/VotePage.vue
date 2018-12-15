@@ -110,6 +110,9 @@ export default {
       API.user.requestVote(this.userId, { candidateId })
         .then((result) => {
           console.log(result);
+          if (result && result.code === 'EXCEED') {
+            alert('별풍선은 최대 3명에게 줄 수 있습니다.');
+          }
         })
     },
     onBackClick() {
