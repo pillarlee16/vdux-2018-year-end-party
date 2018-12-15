@@ -137,7 +137,7 @@ export default {
       `;
 
       const $img = document.createElement('img');
-      $img.src = `/images/icon_thumb.png`;
+      $img.src = `/images/icon_thumb2.png`;
       $img.style.cssText = `
         position: relative;
         width: 100%;
