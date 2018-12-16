@@ -5,7 +5,7 @@
     <logo-view v-show="logoActive"></logo-view>
     <site-view v-show="siteActive"></site-view>
     <quiz-view v-show="quizActive"></quiz-view>
-    <chat-view></chat-view>
+    <chat-view v-show="chatActive"></chat-view>
     <like-view></like-view>
     <opening-view ref="opening"></opening-view>
   </div>
@@ -31,6 +31,7 @@ export default {
       logoActive: false,
       siteActive: false,
       quizActive: false,
+      chatActive: true,
     };
   },
   created() {
@@ -59,6 +60,9 @@ export default {
           break;
         case 'SIX':
           this.candidateActive = !this.candidateActive;
+          break;
+        case 'SEVEN':
+          this.chatActive = !this.chatActive;
           break;
       }
     },
