@@ -1,17 +1,10 @@
 <template>
   <div class="camera-view">
     <video autoplay :style="videoStyle"></video>
-    <img src="/images/logo_vdux.png" :style="imageStyle"/>
   </div>
 </template>
 <script>
 export default {
-  props: {
-    mode: {
-      type: String,
-      default: 'video',
-    },
-  },
   data() {
     return {
       videoParam: {
@@ -35,26 +28,12 @@ export default {
         // width: 1440,
         // height: 1080,
       },
-      imageParam: {
-        offsetX: 0,
-        offsetY: 1080 - 225,
-        width: 400,
-        height: 225,
-      },
     };
   },
   computed: {
     videoStyle() {
       const param = this.videoParam;
-      let style = `left: ${param.offsetX}px; top: ${param.offsetY}px; width: ${param.width}px; height: ${param.height}px;`;
-      style = style + ((this.mode === 'video') ? 'visibility: visible;' : 'visibility: hidden;');
-
-      return style;
-    },
-    imageStyle() {
-      const param = this.imageParam;
-      let style = `left: ${param.offsetX}px; top: ${param.offsetY}px; width: ${param.width}px; height: ${param.height}px;`;
-      style = style + ((this.mode === 'image') ? 'visibility: visible;' : 'visibility: hidden;');
+      const style = `left: ${param.offsetX}px; top: ${param.offsetY}px; width: ${param.width}px; height: ${param.height}px;`;
 
       return style;
     },
@@ -89,12 +68,7 @@ export default {
   position: absolute;
   /* background-color: rgba(255, 255, 255, 0.8); */
   box-sizing: border-box;
-  /* border: 3px solid white; */
+  border: 3px solid white;
   /* background-image: url('/images/icon_camera.png') */
-}
-
-.camera-view img {
-  position: absolute;
-  /* background-color: yellow; */
 }
 </style>

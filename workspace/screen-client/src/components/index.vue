@@ -1,25 +1,36 @@
 <template>
   <div id="screen">
-    <candidate-view :active="candidateActive"></candidate-view>
-    <camera-view :mode="cameraMode"></camera-view>
+    <candidate-view v-show="candidateActive"></candidate-view>
+    <camera-view v-show="cameraActive"></camera-view>
+    <logo-view v-show="logoActive"></logo-view>
+    <site-view v-show="siteActive"></site-view>
+    <quiz-view v-show="quizActive"></quiz-view>
     <chat-view></chat-view>
     <like-view></like-view>
+    <opening-view ref="opening"></opening-view>
   </div>
 </template>
 
 <script>
 import CameraView from './CameraView.vue';
+import LogoView from './LogoView.vue';
+import SiteView from './SiteView.vue';
+import QuizView from './QuizView.vue';
 import ChatView from './ChatView.vue';
 import LikeView from './LikeView.vue';
 import CandidateView from './CandidateView.vue';
+import OpeningView from './OpeningView.vue';
 
 import Keyboard from 'ui-common/services/Keyboard.js';
 
 export default {
   data() {
     return {
-      cameraMode: 'video',
       candidateActive: false,
+      cameraActive: false,
+      logoActive: false,
+      siteActive: false,
+      quizActive: false,
     };
   },
   created() {
@@ -32,12 +43,22 @@ export default {
     handleKey(key) {
       switch (key) {
         case 'ONE':
-          this.cameraMode = 'video';
-          this.candidateActive = false;
+          this.$refs.opening.run();
           break;
         case 'TWO':
-          this.cameraMode = 'image';
-          this.candidateActive = true;
+          this.cameraActive = !this.cameraActive;
+          break;
+        case 'THREE':
+          this.logoActive = !this.logoActive;
+          break;
+        case 'FOUR':
+          this.siteActive = !this.siteActive;
+          break;
+        case 'FIVE':
+          this.quizActive = !this.quizActive;
+          break;
+        case 'SIX':
+          this.candidateActive = !this.candidateActive;
           break;
       }
     },
@@ -47,6 +68,10 @@ export default {
     ChatView,
     CameraView,
     LikeView,
+    OpeningView,
+    LogoView,
+    SiteView,
+    QuizView,
   }
 }
 </script>

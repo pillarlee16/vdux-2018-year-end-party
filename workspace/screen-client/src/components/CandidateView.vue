@@ -14,19 +14,10 @@ import { mapState } from 'vuex';
 import API from 'ui-common/services/API/index.js';
 
 export default {
-  props: {
-    active: {
-      type: Boolean,
-      default: false,
-    },
-  },
   computed: {
     ...mapState('candidate', [
       'candidates',
     ]),
-    viewStyle() {
-      return `visibility: ${this.active ? 'visible' : 'hidden'};`;
-    },
   },
   created() {
     API.candidate.requestGetAll();
