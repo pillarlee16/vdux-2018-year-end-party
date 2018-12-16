@@ -68,7 +68,7 @@ export default {
   position: absolute;
   /* background-color: rgba(255, 255, 255, 0.8); */
   box-sizing: border-box;
-  border: 3px solid white;
+  /* border: 3px solid white; */
   /* background-image: url('/images/icon_camera.png') */
 }
 </style>
