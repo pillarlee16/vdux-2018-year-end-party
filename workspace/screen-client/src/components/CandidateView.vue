@@ -1,5 +1,5 @@
 <template>
-<div class="candidate-view" :style="viewStyle">
+<div class="candidate-view">
   <div class="inner">
     <div class="grid">
       <div class="grid-box" v-for="(obj, idx) in candidates" :key="idx">

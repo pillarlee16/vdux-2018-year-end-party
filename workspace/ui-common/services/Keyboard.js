@@ -16,6 +16,7 @@ const KEYNAME = {
   57: 'NINE',
   48: 'ZERO',
   13: 'ENTER',
+  81: 'Q',
 }
 
 export default new Vue({

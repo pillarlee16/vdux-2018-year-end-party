@@ -1,5 +1,6 @@
 <template>
   <div id="screen">
+    <pickme-view ref="pickme"></pickme-view>
     <candidate-view v-show="candidateActive"></candidate-view>
     <camera-view v-show="cameraActive"></camera-view>
     <logo-view v-show="logoActive"></logo-view>
@@ -18,6 +19,7 @@ import SiteView from './SiteView.vue';
 import QuizView from './QuizView.vue';
 import ChatView from './ChatView.vue';
 import LikeView from './LikeView.vue';
+import PickmeView from './PickmeView.vue';
 import CandidateView from './CandidateView.vue';
 import OpeningView from './OpeningView.vue';
 
@@ -64,6 +66,9 @@ export default {
         case 'SEVEN':
           this.chatActive = !this.chatActive;
           break;
+        case 'Q':
+          this.$refs.pickme.run();
+          break;
       }
     },
   },
@@ -76,6 +81,7 @@ export default {
     LogoView,
     SiteView,
     QuizView,
+    PickmeView,
   }
 }
 </script>
