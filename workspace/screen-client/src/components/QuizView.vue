@@ -19,7 +19,7 @@ export default {
 .quiz-view .quiz {
   position: absolute;
   left: 90px;
-  top: 526px;
+  top: 353px;
   color: white;
   font-size: 65px;
   padding: 80px;

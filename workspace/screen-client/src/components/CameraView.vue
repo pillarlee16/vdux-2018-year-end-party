@@ -10,8 +10,8 @@ export default {
       videoParam: {
         offsetX: 54,
         offsetY: 105,
-        width: 1160,
-        height: 870,
+        width: 1160 * 0.67,
+        height: 870 * 0.67,
   
         // offsetX: (1920 - 1440 * 0.9) / 2,
         // offsetY: (1080 - 1080 * 0.9) / 2,

@@ -94,8 +94,8 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  width: 1920px;
-  height: 1080px;
+  width: 1280px;
+  height: 720px;
   background-color: black;
 }
 

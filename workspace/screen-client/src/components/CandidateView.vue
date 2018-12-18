@@ -43,8 +43,8 @@ export default {
   position: absolute;
   left: 54px;
   top: 160px;
-  width: 1160px;
-  height: 580px;
+  width: 772px;
+  height: 388px;
   /* background-color: grey; */
   display: flex;
   flex-wrap: wrap;
@@ -52,9 +52,9 @@ export default {
 
 .candidate-view .grid .grid-box {
   position: relative;
-  padding: 12px;
-  width: 290px;
-  height: 290px;
+  padding: 8px;
+  width: 194px;
+  height: 194px;
   box-sizing: border-box;
 }
 

@@ -89,8 +89,8 @@ export default {
   position: absolute;
   right: 54px;
   top: 48px;
-  width: 600px;
-  height: 800px;
+  width: 402px;
+  height: 536px;
   /* overflow: scroll; */
   overflow: hidden;
 }
